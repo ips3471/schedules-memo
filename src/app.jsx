@@ -39,13 +39,14 @@ const DialogContainer = styled.div`
 	/* height: 9rem; */
 `;
 
-function App() {
+function App({ presenter }) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [lists, setLists] = useState(presenter.load());
 	return (
 		<AppWrapper>
 			<Header>위-어카운트</Header>
 			<ListContainer>
-				<Lists />
+				<Lists lists={lists} />
 			</ListContainer>
 			<ButtonContainer>
 				<button

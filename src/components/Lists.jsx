@@ -1,13 +1,19 @@
 import React from 'react';
+import List from './list';
+import styled from 'styled-components';
 
-function Lists() {
+const Container = styled.div`
+	padding: ${props => props.theme.paddingSizes.block};
+`;
+function Lists({ lists }) {
 	return (
-		<div>
+		<Container>
 			<ul>
-				<li>리스트1</li>
-				<li>리스트2</li>
+				{lists.map(list => (
+					<List key={list.id} list={list} />
+				))}
 			</ul>
-		</div>
+		</Container>
 	);
 }
 
