@@ -5,11 +5,17 @@ class ListsPresenter {
 	load() {
 		return this.lists;
 	}
-	add(list) {
+	add(list, update) {
+		const { title, howMany, date, place, code } = list;
+		if (!title || !howMany || !date || !place || !code) {
+			return;
+		}
 		this.lists.push(list);
+		update(this.lists);
 	}
-	remove(list) {
-		this.lists = this.lists.filter(item => item !== list);
+	remove(list, update) {
+		this.lists = this.lists.filter(item => item.id !== list.id);
+		update(this.lists);
 	}
 }
 

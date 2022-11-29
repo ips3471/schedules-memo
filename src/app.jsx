@@ -42,6 +42,11 @@ const DialogContainer = styled.div`
 function App({ presenter }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [lists, setLists] = useState(presenter.load());
+	function handleAdd(item) {
+		console.log('handleAdd from app');
+		presenter.add(item, setLists);
+		setIsOpen(false);
+	}
 	return (
 		<AppWrapper>
 			<Header>위-어카운트</Header>
@@ -62,7 +67,10 @@ function App({ presenter }) {
 			</ButtonContainer>
 			{isOpen && (
 				<DialogContainer>
-					<AddDialog setIsDialogOpen={setIsOpen} />
+					<AddDialog
+						setIsDialogOpen={setIsOpen}
+						handleAdd={handleAdd}
+					/>
 				</DialogContainer>
 			)}
 		</AppWrapper>
