@@ -15,15 +15,6 @@ const presenter = new ListsPresenter([
 		date: '22-12-02',
 		place: '지리산자연휴양림',
 		code: '1234',
-		state: '완료',
-	},
-	{
-		id: '2',
-		title: '설악산',
-		howMany: 6,
-		date: '23-01-03',
-		place: '설악산자연휴양림',
-		code: '1234',
 		state: '입장',
 	},
 ]);
