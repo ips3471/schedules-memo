@@ -5,10 +5,12 @@ import Header from './header';
 const Form = styled.form`
 	input {
 		width: 100%;
+		padding: 0.5em;
 	}
 `;
 const ButtonContainer = styled.div`
 	button {
+		padding: 0.5em;
 		width: 50%;
 		&.submit {
 			background-color: ${props => (props.isComplete ? '' : 'darkgray')};
@@ -22,13 +24,15 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 	const dateRef = useRef();
 	const placeRef = useRef();
 	const codeRef = useRef();
+	const joinRef = useRef();
 	function observeFormComplete() {
 		if (
 			titleRef.current.value &&
 			howManyRef.current.value &&
 			dateRef.current.value &&
 			placeRef.current.value &&
-			codeRef.current.value
+			codeRef.current.value &&
+			joinRef.current.value
 		) {
 			console.log('complete');
 			!isComplete && setIsComplete(true);
@@ -38,11 +42,11 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 		}
 	}
 	function onAdd() {
-		console.log('onAdd');
 		const title = titleRef.current.value;
 		const howMany = howManyRef.current.value;
 		const date = dateRef.current.value;
 		const place = placeRef.current.value;
+		const toBeJoin = joinRef.current.value;
 		const code = codeRef.current.value;
 		if (title.length < 3) {
 			alert('모임 제목은 세글자 이상이어야 합니다');
@@ -52,15 +56,35 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 			alert('참여인원은 20명 이하로 입력해야 합니다');
 			return;
 		}
+
+		const splitted = toBeJoin.trim().split(',');
+		if (splitted.length != howMany) {
+			console.log(howMany, splitted.length);
+			alert('참여인원의 수와 입력된 참여자의 수가 일치하지 않습니다');
+			return;
+		}
+
+		const usersArr = [];
+		splitted.forEach(name => {
+			usersArr.push({
+				name,
+				id: name + Math.random(),
+			});
+		});
+
 		const item = {
-			id: new Date().toString(),
+			id: Date.now().toString(),
 			title,
 			howMany,
 			date,
 			place,
 			code,
+			whoAre: usersArr,
+			host: splitted[0],
 			state: '입장',
 		};
+
+		console.log('created', item);
 
 		isComplete && handleAdd(item);
 	}
@@ -79,6 +103,12 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 					ref={howManyRef}
 					type='number'
 					placeholder='참여자 수'
+					onKeyUp={() => observeFormComplete()}
+				/>
+				<input
+					ref={joinRef}
+					type='text'
+					placeholder='참여자 이름(콤마로 구분, 가장 앞이 모임장)'
 					onKeyUp={() => observeFormComplete()}
 				/>
 				<input

@@ -11,9 +11,6 @@ const Container = styled.div`
 		flex-direction: column;
 		font-size: 0.8em;
 	}
-	.list__place {
-		width: 6.4rem;
-	}
 	.list__date {
 		align-items: center;
 		width: 3.6rem;
@@ -22,6 +19,7 @@ const Container = styled.div`
 	padding-bottom: 0.5em;
 `;
 const Button = styled.button`
+	font-size: 0.8em;
 	border: 1px solid darkgray;
 	background-color: ${props =>
 		props.state === '입장'
@@ -29,22 +27,42 @@ const Button = styled.button`
 			: props.theme.bgColors.secondary};
 `;
 const DateSpan = styled.span`
-	color: ${props => (props.diffDay <= 4 ? 'orange' : '')};
+	span {
+		color: ${props => (props.diffDay <= 4 ? 'orange' : '')};
+		font-size: 0.9em;
+	}
+`;
+const JoinedSpan = styled.span`
+	flex-basis: 2.5em;
+	text-align: right;
+	span {
+		font-size: 0.8em;
+	}
+`;
+const PlaceSpan = styled.span`
+	span {
+		font-size: 0.9em;
+		width: 6.6rem;
+	}
 `;
 
-function List({ list }) {
-	const [joined, setJoined] = useState(1);
+function List({ list, movePageTo }) {
 	const { title, howMany, place, date, state } = list;
 	const dateArr = new Array('일', '월', '화', '수', '목', '금', '토');
 	const formatted = new Date(`20${date}`);
 	const diffDay = Math.ceil((formatted - new Date()) / 1000 / 60 / 60 / 24);
 
 	function onClick() {
-		console.log(state);
+		const code = prompt('참여코드를 입력하세요');
+		if (code === list.code) {
+			movePageTo(list);
+		} else if (code == undefined) {
+			return;
+		} else {
+			alert('참여코드를 잘못 입력했습니다');
+			return;
+		}
 	}
-
-	console.log(diffDay);
-	// console.log(new Date().getTime().toLocaleString());
 
 	return (
 		<Container>
@@ -55,22 +73,18 @@ function List({ list }) {
 						: `${formatted.getMonth() >= 6 ? '' : '0'}${
 								formatted.getMonth() + 1
 						  }월
-                    ${
-						formatted.getDate() >= 10 ? '' : '0'
-					}${formatted.getDate()}일
-                    `}
+                ${formatted.getDate() >= 10 ? '' : '0'}${formatted.getDate()}일
+                `}
 				</span>
 				<span className='date'>({dateArr[formatted.getDay()]})</span>
 			</DateSpan>
-			<div className='list__place'>
+			<PlaceSpan className='list__place'>
 				<span>{title}</span>
 				<span>{place}</span>
-			</div>
-			<div>
-				<span>
-					{joined}/{howMany}명
-				</span>
-			</div>
+			</PlaceSpan>
+			<JoinedSpan>
+				<span>{howMany}명</span>
+			</JoinedSpan>
 			<div>
 				<Button onClick={() => onClick()} state={state}>
 					{state}

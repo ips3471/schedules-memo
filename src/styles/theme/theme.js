@@ -12,7 +12,7 @@ const theme = {
 	},
 	fontSizes: {
 		heading1: '1.7rem',
-		heading2: '1.1rem',
+		heading2: '1rem',
 		nav: '1.2rem',
 		button: '0.9rem',
 		content1: '1rem',
@@ -20,8 +20,8 @@ const theme = {
 		content3: '0.5rem',
 	},
 	paddingSizes: {
-		block: '1em',
-		element: '0.7em',
+		block: '0.9em',
+		element: '0.3em',
 	},
 };
 
