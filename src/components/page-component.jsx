@@ -100,9 +100,9 @@ function PageComponent({
 					{title}에 사용된 금액: {total.toLocaleString('ko-KR')}
 				</span>
 			</div>
-			<div className='recipt'>
+			{/* 			<div className='recipt'>
 				<button>영수증</button>
-			</div>
+			</div> */}
 			<div className='break'>
 				<span className='break-item'></span>
 			</div>

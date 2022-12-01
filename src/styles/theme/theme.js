@@ -22,6 +22,7 @@ const theme = {
 	paddingSizes: {
 		block: '0.9em',
 		element: '0.3em',
+		navbar: '3.5rem',
 	},
 };
 

@@ -1,3 +1,5 @@
+import { addList } from '../services/database';
+
 class ListsPresenter {
 	constructor(lists) {
 		this.lists = lists;
@@ -69,10 +71,13 @@ class ListsPresenter {
 		};
 		this.lists.push(newItem);
 		update(this.lists);
+		addList(list).catch(console.error);
+		//firease에 list를 upload
 	}
-	setAccount(account, listId) {
+	setAccount(account, listId, update) {
 		const index = this.lists.findIndex(item => item.id === listId);
 		this.lists[index].account = account;
+		update(account);
 	}
 	remove(list, update) {
 		this.lists = this.lists.filter(item => item.id !== list.id);

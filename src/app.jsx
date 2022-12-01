@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AppButton from './components/button';
 import AddDialog from './components/dialog-add';
 import AppHeader from './components/header';
 import Lists from './components/Lists';
 import ListPage from './components/list-page';
+import { getLists } from './services/database';
 
 const AppWrapper = styled.div`
 	width: 100%;
@@ -13,17 +14,16 @@ const AppWrapper = styled.div`
 const ListContainer = styled.div`
 	width: 100%;
 	overflow-y: auto;
-
 	background-color: #ffffff;
-	padding: 0 0.5em;
+	padding: ${props => props.theme.paddingSizes.navbar} 0.5em 0 0.5em;
 `;
 const DialogContainer = styled.div`
-	border: 1px solid #000000;
-	position: absolute;
+	position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 80%;
+	height: 50%;
 `;
 const ButtonContainer = styled.div`
 	width: 100%;
@@ -43,9 +43,16 @@ const ButtonContainer = styled.div`
 function App({ presenter }) {
 	const [whichPage, setWhichPage] = useState(null);
 	const [isOpen, setIsOpen] = useState(false);
-	const [lists, setLists] = useState(presenter.load());
+	const [lists, setLists] = useState([]);
 
+	useEffect(() => {
+		getLists().then(lists => {
+			console.log(lists);
+			return setLists([lists]);
+		});
+	}, []);
 	function handleAdd(item) {
+		console.log(item);
 		setIsOpen(false);
 		presenter.addList(item, setLists);
 	}

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Header from './header';
 
 const Form = styled.form`
+	padding-top: ${props => props.theme.paddingSizes.navbar};
 	input,
 	select {
 		width: 100%;
@@ -80,25 +81,25 @@ function ReceiptAdd({
 					placeholder='사용금액'
 					onKeyUp={() => observeFormComplete()}
 				/>
+				<ButtonContainer isComplete={isComplete}>
+					<button
+						onClick={() => {
+							setIsDialogOpen(false);
+						}}
+					>
+						취소
+					</button>
+					<button
+						type='submit'
+						className='submit'
+						onClick={() => {
+							onAddClick();
+						}}
+					>
+						확인
+					</button>
+				</ButtonContainer>
 			</Form>
-			<ButtonContainer isComplete={isComplete}>
-				<button
-					onClick={() => {
-						setIsDialogOpen(false);
-					}}
-				>
-					취소
-				</button>
-				<button
-					type='submit'
-					className='submit'
-					onClick={() => {
-						onAddClick();
-					}}
-				>
-					확인
-				</button>
-			</ButtonContainer>
 		</>
 	);
 }

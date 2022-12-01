@@ -4,10 +4,8 @@ import normalize from 'styled-normalize';
 const GlobalStyle = createGlobalStyle`
     ${normalize}
     body {
-        /* overflow: hidden; */
         width: 100vw;
-	height: 100vh;
-	/* overflow: hidden; */
+    	height: 100vh;
 
     }
     * {

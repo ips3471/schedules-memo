@@ -49,7 +49,7 @@ const PlaceSpan = styled.span`
 function List({ list, movePageTo }) {
 	const { title, howMany, place, date, state } = list;
 	const dateArr = new Array('일', '월', '화', '수', '목', '금', '토');
-	const formatted = new Date(`20${date}`);
+	const formatted = new Date(date);
 	const diffDay = Math.ceil((formatted - new Date()) / 1000 / 60 / 60 / 24);
 
 	function onClick() {
