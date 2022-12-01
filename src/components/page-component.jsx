@@ -8,6 +8,14 @@ const Container = styled.div`
 	.category-header {
 		display: flex;
 		justify-content: space-between;
+		button {
+			background-color: transparent;
+			border: none;
+			font-size: 1.4em;
+			position: relative;
+			left: 0;
+			bottom: 0.2em;
+		}
 	}
 	.category {
 		padding: 0.2em;
@@ -32,13 +40,20 @@ const Container = styled.div`
 	}
 	.break {
 		text-align: center;
-		line-height: 50%;
+		width: 100%;
+		padding: 0.3em;
+		.break-item {
+			display: inline-block;
+			width: 90%;
+			height: 1px;
+			border-top: 1px solid gray;
+		}
 	}
 `;
 const DialogContainer = styled.div`
-	position: absolute;
-	top: 50%;
+	position: fixed;
 	left: 50%;
+	top: 50%;
 	transform: translate(-50%, -50%);
 	width: 80%;
 `;
@@ -72,7 +87,7 @@ function PageComponent({
 		<Container className='categories'>
 			<div className='category-header'>
 				<h3>{title}</h3>
-				<button onClick={() => setIsDialogOpen(true)}>추가하기</button>
+				<button onClick={() => setIsDialogOpen(true)}>✍</button>
 			</div>
 			<ul className='category'>
 				{receipts.length > 0 &&
@@ -89,7 +104,7 @@ function PageComponent({
 				<button>영수증</button>
 			</div>
 			<div className='break'>
-				▪<br />▪<br />▪
+				<span className='break-item'></span>
 			</div>
 			<DialogContainer>
 				{isDialogOpen && (

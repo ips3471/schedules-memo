@@ -13,10 +13,9 @@ const AppWrapper = styled.div`
 const ListContainer = styled.div`
 	width: 100%;
 	overflow-y: auto;
-	border: 1px solid blue;
 
 	background-color: #ffffff;
-	padding: 0.5em;
+	padding: 0 0.5em;
 `;
 const DialogContainer = styled.div`
 	border: 1px solid #000000;
@@ -74,14 +73,7 @@ function App({ presenter }) {
 			</ListContainer>
 
 			<ButtonContainer whichPage={whichPage}>
-				{whichPage ? (
-					<AppButton
-						name='입금 완료'
-						callback={() => {
-							console.log('정산완료');
-						}}
-					/>
-				) : (
+				{!whichPage && (
 					<AppButton
 						name='모임 추가'
 						callback={() => {

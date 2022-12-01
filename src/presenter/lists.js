@@ -70,6 +70,10 @@ class ListsPresenter {
 		this.lists.push(newItem);
 		update(this.lists);
 	}
+	setAccount(account, listId) {
+		const index = this.lists.findIndex(item => item.id === listId);
+		this.lists[index].account = account;
+	}
 	remove(list, update) {
 		this.lists = this.lists.filter(item => item.id !== list.id);
 		update(this.lists);

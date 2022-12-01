@@ -34,10 +34,8 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 			codeRef.current.value &&
 			joinRef.current.value
 		) {
-			console.log('complete');
 			!isComplete && setIsComplete(true);
 		} else {
-			console.log('net complete yet');
 			isComplete && setIsComplete(false);
 		}
 	}
@@ -57,17 +55,17 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 			return;
 		}
 
-		const splitted = toBeJoin.trim().split(',');
+		const splitted = toBeJoin.split(',');
 		if (splitted.length != howMany) {
-			console.log(howMany, splitted.length);
 			alert('참여인원의 수와 입력된 참여자의 수가 일치하지 않습니다');
 			return;
 		}
 
 		const usersArr = [];
 		splitted.forEach(name => {
+			const trimmed = name.trim();
 			usersArr.push({
-				name,
+				name: trimmed,
 				id: name + Math.random(),
 			});
 		});
@@ -82,9 +80,8 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 			whoAre: usersArr,
 			host: splitted[0],
 			state: '입장',
+			account: null,
 		};
-
-		console.log('created', item);
 
 		isComplete && handleAdd(item);
 	}
@@ -137,7 +134,6 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 			<ButtonContainer isComplete={isComplete}>
 				<button
 					onClick={() => {
-						console.log('모임추가 취소');
 						setIsDialogOpen(false);
 					}}
 				>
@@ -147,7 +143,6 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 					className='submit'
 					type='summit'
 					onClick={() => {
-						console.log('모임추가 확인');
 						onAdd();
 					}}
 				>

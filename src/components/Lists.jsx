@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ReceiptAdd from './receipt-add';
 
 const Container = styled.div`
-	/* padding: ${props => props.theme.paddingSizes.block}; */
+	padding-top: ${props => props.theme.paddingSizes.block};
 	/* overflow-y: scroll; */
 	/* max-height: 50%;
 	overflow: scroll;

@@ -36,10 +36,8 @@ function ReceiptAdd({
 			paymentRef.current.value &&
 			whereRef.current.value
 		) {
-			console.log('complete');
 			!isComplete && setIsComplete(true);
 		} else {
-			console.log('net complete yet');
 			isComplete && setIsComplete(false);
 		}
 	}
