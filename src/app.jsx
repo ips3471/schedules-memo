@@ -48,7 +48,6 @@ function App({ presenter }) {
 	useEffect(() => {
 		getLists().then(lists => {
 			const receiptsContained = lists.map(list => initReceipts(list));
-			console.log(receiptsContained);
 			return setLists(receiptsContained);
 		});
 
