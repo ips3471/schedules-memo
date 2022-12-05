@@ -9,11 +9,9 @@ import { addList, getLists } from './services/database';
 
 const AppWrapper = styled.div`
 	width: 100%;
-	height: 100%;
 `;
 const ListContainer = styled.div`
 	width: 100%;
-	overflow-y: auto;
 	background-color: #ffffff;
 	padding: ${props => props.theme.paddingSizes.navbar} 0.5em 0 0.5em;
 `;
