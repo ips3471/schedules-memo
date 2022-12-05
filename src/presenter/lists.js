@@ -1,4 +1,4 @@
-import { addList } from '../services/database';
+import { addList, addReceipt } from '../services/database';
 
 class ListsPresenter {
 	constructor(lists) {
@@ -10,40 +10,60 @@ class ListsPresenter {
 	loadList(listId) {
 		return this.lists.find(list => list.id === listId);
 	}
-	getTotalWithCategory(listId, category) {
-		const foundList = this.lists.find(item => item.id === listId);
-		if (category) {
-			return foundList.receipts[category].reduce(
-				(prev, curr) => prev + Number(curr.payment),
-				0,
-			);
-		}
-	}
-	getWholeTotal(listId) {
-		return (
-			this.getTotalWithCategory(listId, 'self') +
-			this.getTotalWithCategory(listId, 'ticket') +
-			this.getTotalWithCategory(listId, 'mart') +
-			this.getTotalWithCategory(listId, 'car') +
-			this.getTotalWithCategory(listId, 'reservation')
+	getTotalWithCategory(list, category) {
+		// if (!category && !list.receipts[category]) return;
+		const receiptsByCategory = list.receipts[category];
+
+		return Object.values(receiptsByCategory).reduce(
+			(prev, curr) => prev + Number(curr.payment),
+			0,
 		);
 	}
-	getUserTotal(listId, userName) {
-		const foundList = this.lists.find(item => item.id === listId);
-		const categories = foundList.receipts;
-		const self = categories.self.filter(item => item.name === userName);
-		const reservation = categories.reservation.filter(
-			item => item.name === userName,
-		);
-		const mart = categories.mart.filter(item => item.name === userName);
-		const ticket = categories.ticket.filter(item => item.name === userName);
-		const car = categories.car.filter(item => item.name === userName);
+
+	getWholeTotal(list) {
+		const food = this.getTotalWithCategory(list, 'food') || 0;
+		const ticket = this.getTotalWithCategory(list, 'ticket') || 0;
+		const mart = this.getTotalWithCategory(list, 'mart') || 0;
+		const car = this.getTotalWithCategory(list, 'car') || 0;
+		const reservation = this.getTotalWithCategory(list, 'reservation') || 0;
+
+		return ticket + mart + car + reservation + food;
+	}
+	getUserTotal(list, userName) {
+		const categories = list.receipts;
+		if (!categories) return;
+		const reservation = categories.reservation
+			? Object.values(categories.reservation).filter(
+					item => item.name === userName,
+			  ) //
+			: [];
+		const mart = categories.mart
+			? Object.values(categories.mart).filter(
+					item => item.name === userName,
+			  ) //
+			: [];
+		const ticket = categories.ticket
+			? Object.values(categories.ticket).filter(
+					item => item.name === userName,
+			  ) //
+			: [];
+		const car = categories.car
+			? Object.values(categories.car).filter(
+					item => item.name === userName,
+			  ) //
+			: [];
+		const food = categories.food
+			? Object.values(categories.food).filter(
+					item => item.name === userName,
+			  ) //
+			: [];
+
 		return (
-			self.reduce((prev, curr) => prev + Number(curr.payment), 0) +
 			reservation.reduce((prev, curr) => prev + Number(curr.payment), 0) +
 			mart.reduce((prev, curr) => prev + Number(curr.payment), 0) +
 			ticket.reduce((prev, curr) => prev + Number(curr.payment), 0) +
-			car.reduce((prev, curr) => prev + Number(curr.payment), 0)
+			car.reduce((prev, curr) => prev + Number(curr.payment), 0) +
+			food.reduce((prev, curr) => prev + Number(curr.payment), 0)
 		);
 	}
 	addList(list, update) {
@@ -83,10 +103,10 @@ class ListsPresenter {
 		this.lists = this.lists.filter(item => item.id !== list.id);
 		update(this.lists);
 	}
-	addReceipt(item, listId, category) {
-		let foundReceipts = this.lists.find(item => item.id === listId);
-		foundReceipts.receipts[category].push(item);
-	}
+	// addReceipt(item, list, category, updated) {
+	// 	list.receipts[category].push(item);
+	// 	addReceipt(list.id, category, item);
+	// }
 }
 
 export default ListsPresenter;

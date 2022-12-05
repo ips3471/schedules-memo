@@ -30,6 +30,19 @@ function ReceiptAdd({
 	const nameRef = useRef();
 	const paymentRef = useRef();
 	const whereRef = useRef();
+	const [form, setForm] = useState({
+		name: '',
+		where: '',
+		payment: 0,
+	});
+
+	function handleChange(e) {
+		e.preventDefault();
+		const { name, value } = e.target;
+		setForm(prev => {
+			return { ...prev, [name]: value };
+		});
+	}
 
 	function observeFormComplete() {
 		if (
@@ -43,28 +56,32 @@ function ReceiptAdd({
 		}
 	}
 
-	function onAddClick() {
-		const name = nameRef.current.value;
-		const payment = paymentRef.current.value;
-		const where = whereRef.current.value;
+	function onAddClick(e) {
+		e.preventDefault();
+		const { name, payment, where } = form;
 
 		const item = {
 			id: Date.now().toString(),
-			name,
+			name: name || list.host,
 			where,
 			payment,
 			category,
 		};
+
 		isComplete && updateReceipts(item);
 	}
 
 	return (
 		<>
 			<Header title={title + ' 계산내역 추가'} />
-			<Form id='receiptForm'>
-				<select ref={nameRef}>
+			<Form onSubmit={onAddClick} id='receiptForm'>
+				<select onChange={handleChange} name='name' ref={nameRef}>
 					{list.whoAre.map(user => (
-						<option form='receiptForm' key={user.id}>
+						<option
+							form='receiptForm'
+							onChange={handleChange}
+							key={user.id}
+						>
 							{user.name}
 						</option>
 					))}
@@ -73,29 +90,28 @@ function ReceiptAdd({
 					type='text'
 					ref={whereRef}
 					placeholder='사용처'
+					onChange={handleChange}
+					name='where'
 					onKeyUp={() => observeFormComplete()}
 				/>
 				<input
 					ref={paymentRef}
 					type='number'
 					placeholder='사용금액'
+					onChange={handleChange}
+					name='payment'
 					onKeyUp={() => observeFormComplete()}
 				/>
 				<ButtonContainer isComplete={isComplete}>
 					<button
+						type='button'
 						onClick={() => {
 							setIsDialogOpen(false);
 						}}
 					>
 						취소
 					</button>
-					<button
-						type='submit'
-						className='submit'
-						onClick={() => {
-							onAddClick();
-						}}
-					>
+					<button type='submit' className='submit'>
 						확인
 					</button>
 				</ButtonContainer>

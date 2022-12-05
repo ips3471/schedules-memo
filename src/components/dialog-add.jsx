@@ -70,7 +70,7 @@ function AddDialog({ setIsDialogOpen, handleAdd }) {
 			place,
 			code,
 			whoAre,
-			host: whoAre[0],
+			host: whoAre[0].name,
 			state: '입장',
 			account: null,
 			receipts: {

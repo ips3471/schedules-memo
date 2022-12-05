@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import AppButton from './button';
 import PageComponent from './page-component';
 import * as controls from './controls/controls';
+import { addAccount } from '../services/database';
+import WholeTotal from './wholeTotal';
+import PersonToPay from './personToPay';
+import PersonToPayBack from './personToPayBack';
+import PersonToManage from './personToManage';
 
 const Container = styled.div`
 	padding-top: ${props => props.theme.paddingSizes.block};
@@ -19,9 +24,11 @@ const Container = styled.div`
 		background-color: ${props => props.theme.bgColors.secondary};
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		height: 3rem;
 	}
 	.account-button {
+		height: 100%;
 		margin-top: 1rem;
 		transform: scale(1.04);
 		button {
@@ -29,6 +36,8 @@ const Container = styled.div`
 		}
 	}
 	.account-info {
+		height: 100%;
+
 		line-height: 2rem;
 		margin-top: 1rem;
 		transform: scale(1.04);
@@ -44,20 +53,18 @@ const PersonalPayment = styled.li`
 `;
 
 function ListPage({ list, presenter }) {
-	const { self, mart, ticket, car, reservation } = list.receipts;
-	const receiptsArr = [self, mart, ticket, car, reservation];
+	// const { self, mart, ticket, car, reservation } = list.receipts;
+	// const receiptsArr = [self, mart, ticket, car, reservation];
 	const [account, setAccount] = useState();
+	const [total, setTotal] = useState(0);
 
 	useEffect(() => {
 		setAccount(list.account);
+		setTotal(presenter.getWholeTotal(list));
 	}, []);
 
-	const users = presenter.loadList(list.id).whoAre;
-
-	const [total, setTotal] = useState(presenter.getWholeTotal(list.id));
-
-	function sumPayment() {
-		setTotal(presenter.getWholeTotal(list.id));
+	function sumPayment(payment) {
+		setTotal(prev => prev + Number(payment));
 	}
 
 	const handleAccount = () => {
@@ -69,52 +76,55 @@ function ListPage({ list, presenter }) {
 		if (!bank || !account || !person) {
 			return;
 		}
+
 		const accountInfo = {
 			bank,
 			account,
 			person,
 		};
-		presenter.setAccount(accountInfo, list.id, setAccount);
+
+		addAccount(list.id, accountInfo);
+		setAccount(accountInfo);
 	};
 
 	const handleFinish = () => {
-		console.log('dd');
+		console.log('you should implements this function');
 	};
 
 	return (
 		<Container>
 			<h2>💘 {list.title} 정산 페이지입니다!</h2>
-			{receiptsArr.map(receipts => (
+			{['food', 'mart', 'ticket', 'car', 'reservation'].map(category => (
 				<PageComponent
 					sumPayment={sumPayment}
-					title={controls.generateTitle(list, receipts)}
-					items={receipts}
+					title={controls.generateTitle(list, category)}
+					items={
+						list.receipts[category]
+							? Object.values(list.receipts[category])
+							: []
+					}
 					presenter={presenter}
-					key={receiptsArr.indexOf(receipts)}
+					key={[
+						'food',
+						'mart',
+						'ticket',
+						'car',
+						'reservation',
+					].indexOf(category)}
 					list={list}
-					category={controls.generateCategory(list, receipts)}
+					category={category}
 				/>
 			))}
-			<div className='totalSum'>
-				지금까지 소비한 금액: {total.toLocaleString('ko-KR')}
-			</div>
+			<WholeTotal total={total} />
+
 			<div className='personal'>
 				<h3>개인별 정산예정 금액:</h3>
-				<ul>
-					{users.map(user => {
-						const cost = controls.calculateCost(
-							total,
-							list,
-							presenter.getUserTotal(list.id, user.name),
-						);
 
-						const negativeCost = (cost * -1).toLocaleString(
-							'ko-KR',
-							{
-								style: 'currency',
-								currency: 'KRW',
-							},
-						);
+				<ul>
+					{list.whoAre.map(user => {
+						const cost =
+							total / list.whoAre.length -
+							controls.getUserTotal(list, user.name);
 
 						return (
 							<PersonalPayment
@@ -122,29 +132,36 @@ function ListPage({ list, presenter }) {
 								value={controls.calculateCost(
 									total,
 									list,
-									presenter.getUserTotal(list.id, user.name),
+									presenter.getUserTotal(list, user.name),
 								)}
 							>
 								{user.name === list.host ? '👑' : '🙂'}
-								{user.name === list.host &&
-									`${user.name} 개인 지출: ${negativeCost}`}
-								{user.name !== list.host &&
-									cost > 0 &&
-									`${user.name}님은 👑${
-										list.host
-									}에게 ${controls.toLocalCurrency(
-										total,
-										list,
-										presenter.getUserTotal(
-											list.id,
-											user.name,
-										),
-									)} 입금`}
+								{user.name === list.host && (
+									<PersonToManage
+										username={user.name}
+										total={total}
+										cost={cost}
+										list={list}
+										member={list.whoAre.length}
+									/>
+								)}
+								{user.name !== list.host && cost > 0 && (
+									<PersonToPay
+										total={total}
+										list={list}
+										cost={cost}
+										member={list.whoAre.length}
+										username={user.name}
+										host={list.host}
+									/>
+								)}
+
 								{user.name !== list.host && cost < 0 && (
-									<span className='payback'>
-										{user.name}님은 👑{list.host}에게{' '}
-										{negativeCost} 받음
-									</span>
+									<PersonToPayBack
+										username={user.name}
+										host={list.host}
+										toPayBack={cost}
+									/>
 								)}
 								{user.name !== list.host &&
 									cost == 0 &&
@@ -164,8 +181,7 @@ function ListPage({ list, presenter }) {
 			{account && (
 				<div className='account account-info'>
 					<span>
-						{list.account.bank} {list.account.account}{' '}
-						{list.account.person}
+						{account.bank} {account.account} {account.person}
 					</span>
 					<AppButton name='정산끝내기' callback={handleFinish} />
 				</div>

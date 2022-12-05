@@ -68,7 +68,7 @@ function List({ list, movePageTo }) {
 		<Container>
 			<DateSpan diffDay={diffDay} className='list__date'>
 				<span className='month'>
-					{diffDay <= 4
+					{diffDay <= 4 && diffDay > 0
 						? `D - ${diffDay}`
 						: `${formatted.getMonth() >= 6 ? '' : '0'}${
 								formatted.getMonth() + 1

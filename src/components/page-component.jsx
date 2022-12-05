@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ReceiptItem from './receipt-item';
 import ReceiptAdd from './receipt-add';
+import { addReceipt } from '../services/database';
+import CategoryTotal from './categoryTotal';
 
 const Container = styled.div`
 	margin-bottom: 0.5em;
@@ -69,19 +71,24 @@ function PageComponent({
 	const [receipts, setReceipts] = useState(items);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [total, setTotal] = useState(0);
+
 	function updateReceipts(receipt) {
 		setReceipts(items => {
-			let updated = [...items, receipt];
 			setIsDialogOpen(false);
-			presenter.addReceipt(receipt, list.id, receipt.category);
+			let updated = [...items, receipt];
+			addReceipt(list.id, category, receipt);
 			return updated;
 		});
+		setTotal(prev => prev + Number(receipt.payment));
+		sumPayment(receipt.payment);
 	}
+
 	useEffect(() => {
-		const total = presenter.getTotalWithCategory(list.id, category);
-		setTotal(total);
+		// const total = presenter.getTotalWithCategory(list, category);
+		// console.log('total of ', category, total);
+		setTotal(presenter.getTotalWithCategory(list, category) || 0);
 		sumPayment();
-	}, [receipts]);
+	}, []);
 
 	return (
 		<Container className='categories'>
@@ -95,11 +102,7 @@ function PageComponent({
 						<ReceiptItem key={item.id} item={item} />
 					))}
 			</ul>
-			<div className='total'>
-				<span>
-					{title}에 사용된 금액: {total.toLocaleString('ko-KR')}
-				</span>
-			</div>
+			<CategoryTotal total={total} title={title} />
 			{/* 			<div className='recipt'>
 				<button>영수증</button>
 			</div> */}

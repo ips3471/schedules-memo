@@ -5,7 +5,7 @@ import AddDialog from './components/dialog-add';
 import AppHeader from './components/header';
 import Lists from './components/Lists';
 import ListPage from './components/list-page';
-import { getLists } from './services/database';
+import { addList, getLists } from './services/database';
 
 const AppWrapper = styled.div`
 	width: 100%;
@@ -47,18 +47,55 @@ function App({ presenter }) {
 
 	useEffect(() => {
 		getLists().then(lists => {
-			console.log(lists);
-			return setLists([lists]);
+			const receiptsContained = lists.map(list => initReceipts(list));
+			console.log(receiptsContained);
+			return setLists(receiptsContained);
 		});
+
+		function initReceipts(list) {
+			if (list.receipts == null) {
+				return {
+					...list,
+					receipts: {
+						food: [],
+						mart: [],
+						car: [],
+						ticket: [],
+						reservation: [],
+					},
+				};
+			}
+
+			let receipts = { ...list.receipts };
+
+			if (!list.receipts.mart) {
+				receipts = { ...receipts, mart: [] };
+			}
+			if (!list.receipts.car) {
+				receipts = { ...receipts, car: [] };
+			}
+			if (!list.receipts.ticket) {
+				receipts = { ...receipts, ticket: [] };
+			}
+			if (!list.receipts.reservation) {
+				receipts = { ...receipts, reservation: [] };
+			}
+			return { ...list, receipts };
+		}
 	}, []);
-	function handleAdd(item) {
-		console.log(item);
+
+	function handleAdd(schedule) {
+		console.log(schedule);
 		setIsOpen(false);
-		presenter.addList(item, setLists);
+		addList(schedule).then(data => {
+			setLists(prev => [...prev, data]);
+		});
 	}
+
 	function movePageTo(list) {
 		setWhichPage(list);
 	}
+
 	return (
 		<AppWrapper>
 			<AppHeader
