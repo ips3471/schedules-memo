@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import DateItem from './list/date';
 
 const Container = styled.div`
 	display: flex;
@@ -46,11 +47,13 @@ const PlaceSpan = styled.span`
 	}
 `;
 
+/*
+곧 다가오는 일정일 경우 하이라이트
+diffDay <= 4 ? 'orange' : ''
+ */
+
 function List({ list, movePageTo }) {
 	const { title, howMany, place, date, state } = list;
-	const dateArr = new Array('일', '월', '화', '수', '목', '금', '토');
-	const formatted = new Date(date);
-	const diffDay = Math.ceil((formatted - new Date()) / 1000 / 60 / 60 / 24);
 
 	function onClick() {
 		const code = prompt('참여코드를 입력하세요');
@@ -66,18 +69,7 @@ function List({ list, movePageTo }) {
 
 	return (
 		<div className='flex items-center justify-between px-appBody'>
-			<span diffDay={diffDay} className='list__date'>
-				<span className='month'>
-					{diffDay <= 4 && diffDay > 0
-						? `D - ${diffDay}`
-						: `${formatted.getMonth() >= 6 ? '' : '0'}${
-								formatted.getMonth() + 1
-						  }월
-                ${formatted.getDate() >= 10 ? '' : '0'}${formatted.getDate()}일
-                `}
-				</span>
-				<span className='date'>({dateArr[formatted.getDay()]})</span>
-			</span>
+			<DateItem date={date} />
 
 			<span className='flex flex-col'>
 				<span>{title}</span>

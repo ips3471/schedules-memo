@@ -41,7 +41,7 @@ const ButtonContainer = styled.div`
 const queryClient = new QueryClient();
 
 function App({ presenter }) {
-	const [whichPage, setWhichPage] = useState();
+	const [whichPage, setWhichPage] = useState(); //receipts가 init된 상태
 	const [isOpen, setIsOpen] = useState(false);
 	const [lists, setLists] = useState([]);
 

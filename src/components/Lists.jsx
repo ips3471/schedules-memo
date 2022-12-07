@@ -7,6 +7,7 @@ import { getLists } from '../services/database';
 const Container = styled.div`
 	padding-top: ${props => props.theme.paddingSizes.block};
 `;
+
 function initReceipts(list) {
 	if (!list.receipts) {
 		return {
@@ -40,6 +41,7 @@ function initReceipts(list) {
 	}
 	return { ...list, receipts };
 }
+
 function Lists({ lists, movePageTo }) {
 	const {
 		isLoading,
@@ -50,12 +52,12 @@ function Lists({ lists, movePageTo }) {
 	return (
 		<Container>
 			<ul>
-				{lists &&
-					lists.map(list => {
+				{schedules &&
+					schedules.map(schedule => {
 						return (
 							<List
-								key={list.id}
-								list={initReceipts(list)}
+								key={schedule.id}
+								list={initReceipts(schedule)}
 								movePageTo={movePageTo}
 							/>
 						);
