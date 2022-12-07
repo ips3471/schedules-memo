@@ -8,13 +8,14 @@ import { theme } from './styles/theme/theme';
 import ListsPresenter from './presenter/lists';
 import { getLists } from './services/database';
 
+console.clear();
 const presenter = new ListsPresenter([]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
-			<GlobalStyle />
+			{/* <GlobalStyle /> */}
 			<App presenter={presenter} />
 		</ThemeProvider>
 	</React.StrictMode>,

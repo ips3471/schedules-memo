@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import AppButton from './button';
 
 const TitleContainer = styled.div`
 	position: fixed;
@@ -17,15 +18,21 @@ const TitleContainer = styled.div`
 		font-size: 1.8rem;
 	}
 `;
-function AppHeader({ title, whichPage, setWhichPage }) {
-	function onExitClick() {
-		setWhichPage(null);
-	}
+
+function AppHeader({ title, handleWhichPage, isPage }) {
+	console.log(isPage);
 	return (
-		<TitleContainer>
-			<h2>{title}</h2>
-			{whichPage && <button onClick={() => onExitClick()}>💨</button>}
-		</TitleContainer>
+		<div className='w-full flex p-4 text-2xl border-b border-zinc-600 mb-4 justify-between'>
+			<h1 className='font-bold ml-2 text-3xl'>{title}</h1>
+			{isPage && (
+				<AppButton
+					name={'💨'}
+					callback={() => {
+						handleWhichPage(null);
+					}}
+				/>
+			)}
+		</div>
 	);
 }
 

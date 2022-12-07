@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import styled from 'styled-components';
 import AppButton from './components/button';
 import AddDialog from './components/dialog-add';
@@ -7,7 +8,7 @@ import Lists from './components/Lists';
 import ListPage from './components/list-page';
 import { addList, getLists } from './services/database';
 
-const AppWrapper = styled.div`
+/* const AppWrapper = styled.div`
 	width: 100%;
 `;
 const ListContainer = styled.div`
@@ -36,10 +37,11 @@ const ButtonContainer = styled.div`
 		border-width: 1px;
 		border-color: #13a313;
 	}
-`;
+`; */
+const queryClient = new QueryClient();
 
 function App({ presenter }) {
-	const [whichPage, setWhichPage] = useState(null);
+	const [whichPage, setWhichPage] = useState();
 	const [isOpen, setIsOpen] = useState(false);
 	const [lists, setLists] = useState([]);
 
@@ -81,6 +83,10 @@ function App({ presenter }) {
 		}
 	}, []);
 
+	function handleWhichPage(list) {
+		!list && setWhichPage(null);
+	}
+
 	function handleAdd(schedule) {
 		console.log(schedule);
 		setIsOpen(false);
@@ -94,26 +100,33 @@ function App({ presenter }) {
 	}
 
 	return (
-		<AppWrapper>
+		<div>
 			<AppHeader
-				title='🏔BETA'
-				whichPage={whichPage}
-				setWhichPage={setWhichPage}
+				title='🏔 BETA'
+				handleWhichPage={handleWhichPage}
+				isPage={!!whichPage}
 			/>
 
-			<ListContainer>
-				{whichPage ? (
-					<ListPage list={whichPage} presenter={presenter} />
-				) : (
-					<Lists
-						lists={lists}
-						movePageTo={movePageTo}
-						handleAdd={handleAdd}
-					/>
-				)}
-			</ListContainer>
+			<QueryClientProvider client={queryClient}>
+				{/* 
+				whichPage가 있다면 lists 목록을,
+				whichPage가 없다면 해당 list의 list-page를 보여줌
+				*/}
+				<div>
+					{whichPage && (
+						<ListPage list={whichPage} presenter={presenter} />
+					)}
+					{!whichPage && (
+						<Lists
+							lists={lists}
+							movePageTo={movePageTo}
+							handleAdd={handleAdd}
+						/>
+					)}
+				</div>
+			</QueryClientProvider>
 
-			<ButtonContainer whichPage={whichPage}>
+			<div whichPage={whichPage}>
 				{!whichPage && (
 					<AppButton
 						name='모임 추가'
@@ -125,17 +138,17 @@ function App({ presenter }) {
 						}}
 					/>
 				)}
-			</ButtonContainer>
+			</div>
 
 			{isOpen && (
-				<DialogContainer>
+				<div>
 					<AddDialog
 						setIsDialogOpen={setIsOpen}
 						handleAdd={handleAdd}
 					/>
-				</DialogContainer>
+				</div>
 			)}
-		</AppWrapper>
+		</div>
 	);
 }
 

@@ -65,8 +65,8 @@ function List({ list, movePageTo }) {
 	}
 
 	return (
-		<Container>
-			<DateSpan diffDay={diffDay} className='list__date'>
+		<div className='flex items-center justify-between px-appBody'>
+			<span diffDay={diffDay} className='list__date'>
 				<span className='month'>
 					{diffDay <= 4 && diffDay > 0
 						? `D - ${diffDay}`
@@ -77,20 +77,23 @@ function List({ list, movePageTo }) {
                 `}
 				</span>
 				<span className='date'>({dateArr[formatted.getDay()]})</span>
-			</DateSpan>
-			<PlaceSpan className='list__place'>
+			</span>
+
+			<span className='flex flex-col'>
 				<span>{title}</span>
 				<span>{place}</span>
-			</PlaceSpan>
-			<JoinedSpan>
+			</span>
+
+			<span>
 				<span>{howMany}명</span>
-			</JoinedSpan>
+			</span>
+
 			<div>
-				<Button onClick={() => onClick()} state={state}>
+				<button onClick={() => onClick()} state={state}>
 					{state}
-				</Button>
+				</button>
 			</div>
-		</Container>
+		</div>
 	);
 }
 
