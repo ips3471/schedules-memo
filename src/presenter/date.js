@@ -17,6 +17,7 @@ class DatePresenter {
 
 	getDay() {
 		const day = this.date.getDate();
+
 		return this._addZero(day) + day + '일';
 	}
 

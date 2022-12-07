@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import AppButton from './button';
 import DateItem from './list/date';
+import PlaceItem from './list/place';
 
 const Container = styled.div`
 	display: flex;
@@ -52,18 +54,23 @@ const PlaceSpan = styled.span`
 diffDay <= 4 ? 'orange' : ''
  */
 
-function List({ list, movePageTo }) {
-	const { title, howMany, place, date, state } = list;
+function List({ list, handleWhichPage }) {
+	const { title, howMany, place, date, state, code } = list;
 
-	function onClick() {
-		const code = prompt('참여코드를 입력하세요');
-		if (code === list.code) {
-			movePageTo(list);
-		} else if (code == undefined) {
-			return;
-		} else {
+	function onEnterClick() {
+		const inserted = prompt('참여코드를 입력하세요');
+
+		if (inserted == null) return;
+
+		if (!_isCodeValid(inserted)) {
 			alert('참여코드를 잘못 입력했습니다');
 			return;
+		}
+
+		handleWhichPage(list);
+
+		function _isCodeValid(inserted) {
+			return inserted === code;
 		}
 	}
 
@@ -71,20 +78,11 @@ function List({ list, movePageTo }) {
 		<div className='flex items-center justify-between px-appBody'>
 			<DateItem date={date} />
 
-			<span className='flex flex-col'>
-				<span>{title}</span>
-				<span>{place}</span>
-			</span>
+			<PlaceItem title={title} place={place} />
 
-			<span>
-				<span>{howMany}명</span>
-			</span>
+			<span>{howMany}명</span>
 
-			<div>
-				<button onClick={() => onClick()} state={state}>
-					{state}
-				</button>
-			</div>
+			<AppButton name={state} callback={() => onEnterClick()} />
 		</div>
 	);
 }

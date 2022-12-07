@@ -42,7 +42,7 @@ function initReceipts(list) {
 	return { ...list, receipts };
 }
 
-function Lists({ lists, movePageTo }) {
+function Lists({ handleWhichPage }) {
 	const {
 		isLoading,
 		error,
@@ -56,9 +56,9 @@ function Lists({ lists, movePageTo }) {
 					schedules.map(schedule => {
 						return (
 							<List
+								handleWhichPage={handleWhichPage}
 								key={schedule.id}
 								list={initReceipts(schedule)}
-								movePageTo={movePageTo}
 							/>
 						);
 					})}

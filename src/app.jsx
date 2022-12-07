@@ -85,6 +85,7 @@ function App({ presenter }) {
 
 	function handleWhichPage(list) {
 		!list && setWhichPage(null);
+		setWhichPage(list);
 	}
 
 	function handleAdd(schedule) {
@@ -113,15 +114,9 @@ function App({ presenter }) {
 				whichPage가 없다면 해당 list의 list-page를 보여줌
 				*/}
 				<div>
-					{whichPage && (
-						<ListPage list={whichPage} presenter={presenter} />
-					)}
+					{whichPage && <ListPage list={whichPage} presenter={presenter} />}
 					{!whichPage && (
-						<Lists
-							lists={lists}
-							movePageTo={movePageTo}
-							handleAdd={handleAdd}
-						/>
+						<Lists handleAdd={handleAdd} handleWhichPage={handleWhichPage} />
 					)}
 				</div>
 			</QueryClientProvider>
@@ -142,10 +137,7 @@ function App({ presenter }) {
 
 			{isOpen && (
 				<div>
-					<AddDialog
-						setIsDialogOpen={setIsOpen}
-						handleAdd={handleAdd}
-					/>
+					<AddDialog setIsDialogOpen={setIsOpen} handleAdd={handleAdd} />
 				</div>
 			)}
 		</div>
