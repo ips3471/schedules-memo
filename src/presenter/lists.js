@@ -1,4 +1,4 @@
-import { addList, addReceipt } from '../services/database';
+import { addList } from '../services/database';
 
 class ListsPresenter {
 	constructor(lists) {
@@ -11,7 +11,6 @@ class ListsPresenter {
 		return this.lists.find(list => list.id === listId);
 	}
 	getTotalWithCategory(list, category) {
-		// if (!category && !list.receipts[category]) return;
 		const receiptsByCategory = list.receipts[category];
 
 		return Object.values(receiptsByCategory).reduce(
@@ -38,24 +37,16 @@ class ListsPresenter {
 			  ) //
 			: [];
 		const mart = categories.mart
-			? Object.values(categories.mart).filter(
-					item => item.name === userName,
-			  ) //
+			? Object.values(categories.mart).filter(item => item.name === userName) //
 			: [];
 		const ticket = categories.ticket
-			? Object.values(categories.ticket).filter(
-					item => item.name === userName,
-			  ) //
+			? Object.values(categories.ticket).filter(item => item.name === userName) //
 			: [];
 		const car = categories.car
-			? Object.values(categories.car).filter(
-					item => item.name === userName,
-			  ) //
+			? Object.values(categories.car).filter(item => item.name === userName) //
 			: [];
 		const food = categories.food
-			? Object.values(categories.food).filter(
-					item => item.name === userName,
-			  ) //
+			? Object.values(categories.food).filter(item => item.name === userName) //
 			: [];
 
 		return (
@@ -92,7 +83,6 @@ class ListsPresenter {
 		this.lists.push(newItem);
 		update(this.lists);
 		addList(list).catch(console.error);
-		//firease에 list를 upload
 	}
 	setAccount(account, listId, update) {
 		const index = this.lists.findIndex(item => item.id === listId);
@@ -103,10 +93,6 @@ class ListsPresenter {
 		this.lists = this.lists.filter(item => item.id !== list.id);
 		update(this.lists);
 	}
-	// addReceipt(item, list, category, updated) {
-	// 	list.receipts[category].push(item);
-	// 	addReceipt(list.id, category, item);
-	// }
 }
 
 export default ListsPresenter;

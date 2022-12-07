@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import List from './list';
-import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { getLists } from '../services/database';
-
-const Container = styled.div`
-	padding-top: ${props => props.theme.paddingSizes.block};
-`;
+import AddScheduleForm from './dialog/add-schedule-form';
+import AppButton from './button/button';
 
 function initReceipts(list) {
 	if (!list.receipts) {
@@ -43,14 +40,18 @@ function initReceipts(list) {
 }
 
 function Lists({ handleWhichPage }) {
+	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
 	const {
 		isLoading,
 		error,
 		data: schedules,
 	} = useQuery(['schedules'], getLists);
 
+	function popUpDialog() {
+		setIsAddFormOpen(!isAddFormOpen);
+	}
 	return (
-		<Container>
+		<div className=''>
 			<ul>
 				{schedules &&
 					schedules.map(schedule => {
@@ -63,7 +64,23 @@ function Lists({ handleWhichPage }) {
 						);
 					})}
 			</ul>
-		</Container>
+			<div className='w-full text-center sticky bottom-0'>
+				<AppButton
+					name='모임 추가'
+					callback={() => {
+						setIsAddFormOpen(true);
+					}}
+				/>
+			</div>
+			{isAddFormOpen && (
+				<div>
+					<AddScheduleForm
+						setIsDialogOpen={setIsAddFormOpen}
+						popUpDialog={popUpDialog}
+					/>
+				</div>
+			)}
+		</div>
 	);
 }
 

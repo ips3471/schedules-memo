@@ -1,16 +1,14 @@
 import React from 'react';
-import DatePresenter from '../../presenter/date';
+import DatePresenter from '../../../presenter/date';
 
 function DateItem({ date }) {
 	const presenter = new DatePresenter(date);
 
 	return (
-		<span className=''>
-			<span className=''>
-				{presenter.getMonth() + ' ' + presenter.getDay()}
-			</span>
+		<div className='flex flex-col items-center basis-20'>
+			<span className=''>{presenter.getDate()}</span>
 			<span className=''>{presenter.getWeek()}</span>
-		</span>
+		</div>
 	);
 }
 export default DateItem;

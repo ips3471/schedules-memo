@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AppButton from './button';
+import AppButton from './button/button';
 import PageComponent from './page-component';
 import * as controls from './controls/controls';
 import { addAccount } from '../services/database';
@@ -104,13 +104,9 @@ function ListPage({ list, presenter }) {
 							: []
 					}
 					presenter={presenter}
-					key={[
-						'food',
-						'mart',
-						'ticket',
-						'car',
-						'reservation',
-					].indexOf(category)}
+					key={['food', 'mart', 'ticket', 'car', 'reservation'].indexOf(
+						category,
+					)}
 					list={list}
 					category={category}
 				/>
@@ -168,10 +164,7 @@ function ListPage({ list, presenter }) {
 									controls.toLocalCurrency(
 										total,
 										list,
-										presenter.getUserTotal(
-											list.id,
-											user.name,
-										),
+										presenter.getUserTotal(list.id, user.name),
 									)}
 							</PersonalPayment>
 						);

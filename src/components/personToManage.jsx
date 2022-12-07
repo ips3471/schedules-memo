@@ -1,10 +1,6 @@
 import React from 'react';
-import { getUserTotal } from './controls/controls';
 
-function PersonToManage({ username, total, list, member, cost }) {
-	const equal = total / member;
-	const paid = getUserTotal(list, username);
-	const toPay = equal - paid;
+function PersonToManage({ username, cost }) {
 	return (
 		<span>
 			{username} 개인 지출:{' '}

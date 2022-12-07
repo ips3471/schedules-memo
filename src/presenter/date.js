@@ -1,16 +1,20 @@
 class DatePresenter {
 	constructor(date) {
 		this.date = new Date(date);
-		this._dateArr = new Array('일', '월', '화', '수', '목', '금', '토');
+		this._dateArr = ['일', '월', '화', '수', '목', '금', '토'];
 		this.diffDay = Math.ceil((this.date - new Date()) / 1000 / 60 / 60 / 24);
+	}
+
+	getDate() {
+		if (this.diffDay > 0 && this.diffDay <= 4) {
+			return 'D - ' + this.diffDay;
+		}
+
+		return this.getMonth() + ' ' + this.getDay();
 	}
 
 	getMonth() {
 		const month = this.date.getMonth() + 1;
-
-		if (this.diffDay > 0 && this.diffDay <= 4) {
-			return 'D - ' + this.diffDay;
-		}
 
 		return this._addZero(month) + month + '월';
 	}

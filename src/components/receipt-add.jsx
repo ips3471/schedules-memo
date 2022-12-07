@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import Header from './header';
+import Header from './header/app';
 
 const Form = styled.form`
 	padding-top: ${props => props.theme.paddingSizes.navbar};
@@ -77,11 +77,7 @@ function ReceiptAdd({
 			<Form onSubmit={onAddClick} id='receiptForm'>
 				<select onChange={handleChange} name='name' ref={nameRef}>
 					{list.whoAre.map(user => (
-						<option
-							form='receiptForm'
-							onChange={handleChange}
-							key={user.id}
-						>
+						<option form='receiptForm' onChange={handleChange} key={user.id}>
 							{user.name}
 						</option>
 					))}

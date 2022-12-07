@@ -1,5 +1,5 @@
 import firebaseApp from '../api/firebase';
-import { set, ref, getDatabase, get, child } from 'firebase/database';
+import { set, ref, getDatabase, get } from 'firebase/database';
 import { v4 as uuid } from 'uuid';
 
 const database = getDatabase(firebaseApp);

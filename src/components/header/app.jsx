@@ -1,4 +1,4 @@
-import AppButton from './button';
+import AppButton from '../button/button';
 
 function AppHeader({ title, handleWhichPage, isPage }) {
 	return (
