@@ -86,7 +86,7 @@ function PageComponent({
 	useEffect(() => {
 		// const total = presenter.getTotalWithCategory(list, category);
 		// console.log('total of ', category, total);
-		setTotal(presenter.getTotalWithCategory(list, category) || 0);
+		setTotal(presenter.sumCategory(category, list) || 0);
 		sumPayment();
 	}, []);
 
@@ -98,9 +98,7 @@ function PageComponent({
 			</div>
 			<ul className='category'>
 				{receipts.length > 0 &&
-					receipts.map(item => (
-						<ReceiptItem key={item.id} item={item} />
-					))}
+					receipts.map(item => <ReceiptItem key={item.id} item={item} />)}
 			</ul>
 			<CategoryTotal total={total} title={title} />
 			{/* 			<div className='recipt'>

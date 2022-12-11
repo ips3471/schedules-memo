@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import AppButton from './button/button';
-import PageComponent from './page-component';
-import * as controls from './controls/controls';
-import { addAccount } from '../services/database';
-import WholeTotal from './wholeTotal';
-import PersonToPay from './personToPay';
-import PersonToPayBack from './personToPayBack';
-import PersonToManage from './personToManage';
+import AppButton from '../../button/button';
+import PageComponent from '../../page-component';
+import * as controls from '../../controls/controls';
+import { addAccount } from '../../../services/database';
+import WholeTotal from '../../wholeTotal';
+import List from '../../../presenter/list';
+import PersonalPayment from './personal-payment';
 
 const Container = styled.div`
 	padding-top: ${props => props.theme.paddingSizes.block};
@@ -43,18 +42,18 @@ const Container = styled.div`
 		transform: scale(1.04);
 	}
 `;
-const PersonalPayment = styled.li`
+/* const PersonalPayment = styled.li`
 	.won {
 		color: ${props => (props.value > 0 ? '' : 'blue')};
 	}
 	.payback {
 		color: blue;
 	}
-`;
+`; */
 
-function ListPage({ list, presenter }) {
-	// const { self, mart, ticket, car, reservation } = list.receipts;
-	// const receiptsArr = [self, mart, ticket, car, reservation];
+function ListPage({ list }) {
+	const presenter = new List(list);
+
 	const [account, setAccount] = useState();
 	const [total, setTotal] = useState(0);
 
@@ -94,7 +93,8 @@ function ListPage({ list, presenter }) {
 	return (
 		<Container>
 			<h2>💘 {list.title} 정산 페이지입니다!</h2>
-			{['food', 'mart', 'ticket', 'car', 'reservation'].map(category => (
+
+			{Object.keys(list.receipts).map(category => (
 				<PageComponent
 					sumPayment={sumPayment}
 					title={controls.generateTitle(list, category)}
@@ -104,73 +104,29 @@ function ListPage({ list, presenter }) {
 							: []
 					}
 					presenter={presenter}
-					key={['food', 'mart', 'ticket', 'car', 'reservation'].indexOf(
-						category,
-					)}
+					key={Object.keys(list.receipts).indexOf(category)}
 					list={list}
 					category={category}
 				/>
 			))}
+
 			<WholeTotal total={total} />
 
 			<div className='personal'>
 				<h3>개인별 정산예정 금액:</h3>
 
 				<ul>
-					{list.whoAre.map(user => {
-						const cost =
-							total / list.whoAre.length -
-							controls.getUserTotal(list, user.name);
-
-						return (
-							<PersonalPayment
-								key={user.id}
-								value={controls.calculateCost(
-									total,
-									list,
-									presenter.getUserTotal(list, user.name),
-								)}
-							>
-								{user.name === list.host ? '👑' : '🙂'}
-								{user.name === list.host && (
-									<PersonToManage
-										username={user.name}
-										total={total}
-										cost={cost}
-										list={list}
-										member={list.whoAre.length}
-									/>
-								)}
-								{user.name !== list.host && cost > 0 && (
-									<PersonToPay
-										total={total}
-										list={list}
-										cost={cost}
-										member={list.whoAre.length}
-										username={user.name}
-										host={list.host}
-									/>
-								)}
-
-								{user.name !== list.host && cost < 0 && (
-									<PersonToPayBack
-										username={user.name}
-										host={list.host}
-										toPayBack={cost}
-									/>
-								)}
-								{user.name !== list.host &&
-									cost == 0 &&
-									controls.toLocalCurrency(
-										total,
-										list,
-										presenter.getUserTotal(list.id, user.name),
-									)}
-							</PersonalPayment>
-						);
-					})}
+					{list.whoAre.map(user => (
+						<PersonalPayment
+							key={user.id}
+							user={user}
+							total={total}
+							list={list}
+						/>
+					))}
 				</ul>
 			</div>
+
 			{account && (
 				<div className='account account-info'>
 					<span>
@@ -179,6 +135,7 @@ function ListPage({ list, presenter }) {
 					<AppButton name='정산끝내기' callback={handleFinish} />
 				</div>
 			)}
+
 			{!account && (
 				<div className='account account-button'>
 					<AppButton

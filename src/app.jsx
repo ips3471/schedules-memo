@@ -3,7 +3,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import AppButton from './components/button/button';
 import AppHeader from './components/header/app';
 import Lists from './components/Lists';
-import ListPage from './components/list-page';
+import ListPage from './components/body/list-page/list-page';
 import { addList, getLists } from './services/database';
 import AddScheduleForm from './components/dialog/add-schedule-form';
 
@@ -75,7 +75,7 @@ function App({ presenter }) {
 				whichPage가 없다면 해당 list의 list-page를 보여줌
 				*/}
 				<div>
-					{whichPage && <ListPage list={whichPage} presenter={presenter} />}
+					{whichPage && <ListPage list={whichPage} />}
 					{!whichPage && <Lists handleWhichPage={handleWhichPage} />}
 				</div>
 			</QueryClientProvider>
