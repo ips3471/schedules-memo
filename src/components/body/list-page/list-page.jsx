@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import AppButton from '../../button/button';
 import PageComponent from '../../page-component';
 import * as controls from '../../controls/controls';
@@ -8,48 +7,7 @@ import WholeTotal from '../../wholeTotal';
 import List from '../../../presenter/list';
 import PersonalPayment from './personal-payment';
 
-const Container = styled.div`
-	padding-top: ${props => props.theme.paddingSizes.block};
-	h2 {
-		font-size: 1.1rem;
-		padding-bottom: 0.8em;
-	}
-	.totalSum {
-		color: red;
-		font-weight: 600;
-	}
-	.account {
-		text-align: right;
-		background-color: ${props => props.theme.bgColors.secondary};
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		height: 3rem;
-	}
-	.account-button {
-		height: 100%;
-		margin-top: 1rem;
-		transform: scale(1.04);
-		button {
-			width: 100%;
-		}
-	}
-	.account-info {
-		height: 100%;
-
-		line-height: 2rem;
-		margin-top: 1rem;
-		transform: scale(1.04);
-	}
-`;
-/* const PersonalPayment = styled.li`
-	.won {
-		color: ${props => (props.value > 0 ? '' : 'blue')};
-	}
-	.payback {
-		color: blue;
-	}
-`; */
+/* payBack의 경우 font-color를 변경해줄 것 */
 
 function ListPage({ page }) {
 	const presenter = new List(page);
@@ -91,8 +49,8 @@ function ListPage({ page }) {
 	};
 
 	return (
-		<Container>
-			<h2>💘 {page.title} 정산 페이지입니다!</h2>
+		<div>
+			<h2 className='py-2'>💘 {page.title} 정산 페이지입니다!</h2>
 
 			{Object.keys(page.receipts).map(category => (
 				<PageComponent
@@ -112,8 +70,8 @@ function ListPage({ page }) {
 
 			<WholeTotal total={total} />
 
-			<div className='personal'>
-				<h3>개인별 정산예정 금액:</h3>
+			<div className=''>
+				<h3 className='py-1'>개인별 정산예정 금액:</h3>
 
 				<ul>
 					{page.whoAre.map(user => (
@@ -127,24 +85,25 @@ function ListPage({ page }) {
 				</ul>
 			</div>
 
-			{account && (
-				<div className='account account-info'>
-					<span>
-						{account.bank} {account.account} {account.person}
-					</span>
-					<AppButton name='정산끝내기' callback={handleFinish} />
-				</div>
-			)}
-
-			{!account && (
-				<div className='account account-button'>
-					<AppButton
-						name='이곳을 클릭해서 입금받을 계좌를 입력하세요(방장만!!!👨‍🦰)'
-						callback={handleAccount}
-					/>
-				</div>
-			)}
-		</Container>
+			<div className='py-2 flex  justify-between'>
+				{account && (
+					<>
+						<span>
+							{account.bank} {account.account} {account.person}
+						</span>
+						<AppButton name='정산끝내기' callback={handleFinish} />
+					</>
+				)}
+				{!account && (
+					<div className='account account-button'>
+						<AppButton
+							name='이곳을 클릭해서 입금받을 계좌를 입력하세요(방장만!!!👨‍🦰)'
+							callback={handleAccount}
+						/>
+					</div>
+				)}
+			</div>
+		</div>
 	);
 }
 
