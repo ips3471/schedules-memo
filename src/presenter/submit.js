@@ -8,22 +8,24 @@ class SubmitPresenter {
 		this.spllitedNames = this.form.people.split(',');
 	}
 
-	addSchedule() {
+	async addSchedule() {
 		const schedule = this.getScheduleItem();
-		addList(schedule);
+		const list = await addList(schedule);
+		console.log(list);
+		return list;
 	}
 
 	checkValidities() {
-		if (!this._checkTitleLength()) return false;
+		if (!this.#checkTitleLength()) return false;
 
-		if (!this._checkMemberSize()) return false;
+		if (!this.#checkMemberSize()) return false;
 
-		if (!this._checkMemberValidity()) return false;
+		if (!this.#checkMemberValidity()) return false;
 
 		return true;
 	}
 
-	_checkTitleLength() {
+	#checkTitleLength() {
 		if (this.form.title.length < this._minTitleLength) {
 			alert('모임 제목은 세글자 이상이어야 합니다');
 			return false;
@@ -31,7 +33,7 @@ class SubmitPresenter {
 		return true;
 	}
 
-	_checkMemberSize() {
+	#checkMemberSize() {
 		if (this.form.howMany > this._maxMemberSize) {
 			alert('참여인원은 20명 이내로 입력해야 합니다');
 			return false;
@@ -39,7 +41,7 @@ class SubmitPresenter {
 		return true;
 	}
 
-	_checkMemberValidity() {
+	#checkMemberValidity() {
 		if (this.spllitedNames.length !== Number(this.form.howMany)) {
 			console.log(this.spllitedNames.length);
 			console.log('howmany', this.form.howMany);

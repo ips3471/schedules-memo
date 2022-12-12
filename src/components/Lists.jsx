@@ -1,15 +1,7 @@
 import React from 'react';
 import List from './list';
-import { useQuery } from '@tanstack/react-query';
-import { getLists } from '../services/database';
 
-function Lists({ handleDisplayLists, isPageCollapsed }) {
-	const {
-		isLoading,
-		error,
-		data: schedules,
-	} = useQuery(['schedules'], getLists);
-
+function Lists({ schedules, setSelectedList }) {
 	return (
 		<div className=''>
 			<ul>
@@ -17,10 +9,9 @@ function Lists({ handleDisplayLists, isPageCollapsed }) {
 					schedules.map(schedule => {
 						return (
 							<List
-								handleDisplayLists={handleDisplayLists}
-								isPageCollapsed={isPageCollapsed}
 								key={schedule.id}
 								list={schedule}
+								setSelectedList={setSelectedList}
 							/>
 						);
 					})}

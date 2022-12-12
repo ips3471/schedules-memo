@@ -1,26 +1,31 @@
-import { useState } from 'react';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import AppButton from './components/button/button';
 import AppHeader from './components/header/app';
 import Lists from './components/Lists';
 import AddScheduleForm from './components/dialog/add-schedule-form';
-
-const queryClient = new QueryClient();
+import { getLists } from './services/database';
+import SubmitPresenter from './presenter/submit';
+import ListPage from './components/body/list-page/list-page';
 
 function App() {
 	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-	const [isVisibleAddScheduleBtn, setIsVisibleAddScheduleBtn] = useState(true);
-	const [isVisibleExitBtn, setIsVisibleExitBtn] = useState(false);
-	const [isPageCollapsed, setIsPageCollapsed] = useState(true);
+	const [schedules, setSchedules] = useState([]);
+	const [selectedList, setSelectedList] = useState(null);
 
-	function handleDisplayLists(isDisplayLists) {
-		setIsVisibleExitBtn(!isDisplayLists);
-		setIsVisibleAddScheduleBtn(isDisplayLists);
-		setIsPageCollapsed(isDisplayLists);
-	}
+	useEffect(() => {
+		getLists().then(data => setSchedules(data));
+	}, []);
 
-	function popUpDialog() {
-		setIsAddFormOpen(!isAddFormOpen);
+	const handleAddSchedule = async form => {
+		const submitPresenter = new SubmitPresenter(form);
+		if (!submitPresenter.checkValidities()) return;
+		const schedule = await submitPresenter.addSchedule();
+		setSchedules(prev => [...prev, schedule]);
+		toggleDialog();
+	};
+
+	function toggleDialog() {
+		setIsAddFormOpen(prev => !prev);
 	}
 
 	return (
@@ -28,26 +33,24 @@ function App() {
 			<div>
 				<AppHeader
 					title='🏔 BETA'
-					handleDisplayLists={handleDisplayLists}
-					isVisibleExitBtn={isVisibleExitBtn}
+					setSelectedList={setSelectedList}
+					selectedList={selectedList}
 				/>
 			</div>
 
-			<QueryClientProvider client={queryClient}>
-				<div className='flex-auto'>
-					<Lists
-						handleDisplayLists={handleDisplayLists}
-						isPageCollapsed={isPageCollapsed}
-					/>
-				</div>
-			</QueryClientProvider>
+			<div className='flex-auto'>
+				{!selectedList && schedules && (
+					<Lists schedules={schedules} setSelectedList={setSelectedList} />
+				)}
+				{selectedList && <ListPage page={selectedList} />}
+			</div>
 
-			{isVisibleAddScheduleBtn && (
+			{!selectedList && (
 				<div className='w-full text-center sticky bottom-0 self-end py-2'>
 					<AppButton
 						name='모임 추가'
 						callback={() => {
-							setIsAddFormOpen(true);
+							toggleDialog();
 						}}
 					/>
 				</div>
@@ -57,7 +60,8 @@ function App() {
 				<div className='fixed top-1/2 -translate-y-1/2'>
 					<AddScheduleForm
 						setIsDialogOpen={setIsAddFormOpen}
-						popUpDialog={popUpDialog}
+						toggleDialog={toggleDialog}
+						handleAddSchedule={handleAddSchedule}
 					/>
 				</div>
 			)}

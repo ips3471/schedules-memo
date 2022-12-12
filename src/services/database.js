@@ -6,10 +6,12 @@ const database = getDatabase(firebaseApp);
 
 export async function addList(list) {
 	const id = uuid();
-	return set(ref(database, `schedules/${id}`), {
+	const updated = {
 		...list,
 		id,
-	});
+	};
+	set(ref(database, `schedules/${id}`), updated);
+	return updated;
 }
 
 export async function addReceipt(listId, category, item) {

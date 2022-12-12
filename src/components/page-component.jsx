@@ -84,8 +84,6 @@ function PageComponent({
 	}
 
 	useEffect(() => {
-		// const total = presenter.getTotalWithCategory(page, category);
-		// console.log('total of ', category, total);
 		setTotal(presenter.sumCategory(category, page) || 0);
 		sumPayment();
 	}, []);

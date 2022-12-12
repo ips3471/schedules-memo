@@ -12,6 +12,8 @@ import PersonalPayment from './personal-payment';
 function ListPage({ page }) {
 	const presenter = new List(page);
 
+	console.log(page);
+
 	const [account, setAccount] = useState();
 	const [total, setTotal] = useState(0);
 
