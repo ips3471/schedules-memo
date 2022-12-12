@@ -5,51 +5,51 @@ import PersonToPay from '../../personToPay';
 import UserPayment from '../../../presenter/user-payment';
 import * as controls from '../../controls/controls';
 
-function PersonalPayment({ user, total, list }) {
-	const presenter = new UserPayment(total, user, list);
+function PersonalPayment({ user, total, page }) {
+	const presenter = new UserPayment(total, user, page);
 
 	const cost =
-		total / list.whoAre.length - presenter.getUserTotal(list, user.name);
+		total / page.whoAre.length - presenter.getUserTotal(page, user.name);
 
 	return (
 		<li>
-			{user.name === list.host ? '👑' : '🙂'}
+			{user.name === page.host ? '👑' : '🙂'}
 
-			{user.name === list.host && (
+			{user.name === page.host && (
 				<PersonToManage
 					username={user.name}
 					total={total}
 					cost={cost}
-					list={list}
-					member={list.whoAre.length}
+					page={page}
+					member={page.whoAre.length}
 				/>
 			)}
 
-			{user.name !== list.host && cost > 0 && (
+			{user.name !== page.host && cost > 0 && (
 				<PersonToPay
 					total={total}
-					list={list}
+					page={page}
 					cost={cost}
-					member={list.whoAre.length}
+					member={page.whoAre.length}
 					username={user.name}
-					host={list.host}
+					host={page.host}
 				/>
 			)}
 
-			{user.name !== list.host && cost < 0 && (
+			{user.name !== page.host && cost < 0 && (
 				<PersonToPayBack
 					username={user.name}
-					host={list.host}
+					host={page.host}
 					toPayBack={cost}
 				/>
 			)}
 
-			{user.name !== list.host &&
+			{user.name !== page.host &&
 				cost == 0 &&
 				controls.toLocalCurrency(
 					total,
-					list,
-					presenter.getUserTotal(list.id, user.name),
+					page,
+					presenter.getUserTotal(page.id, user.name),
 				)}
 		</li>
 	);

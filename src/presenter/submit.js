@@ -40,7 +40,9 @@ class SubmitPresenter {
 	}
 
 	_checkMemberValidity() {
-		if (this.spllitedNames.length !== this.form.howMany) {
+		if (this.spllitedNames.length !== Number(this.form.howMany)) {
+			console.log(this.spllitedNames.length);
+			console.log('howmany', this.form.howMany);
 			alert('참여인원의 수와 입력된 참여자의 수가 일치하지 않습니다');
 			return false;
 		}

@@ -1,84 +1,66 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import AppButton from './components/button/button';
 import AppHeader from './components/header/app';
 import Lists from './components/Lists';
-import ListPage from './components/body/list-page/list-page';
-import { addList, getLists } from './services/database';
 import AddScheduleForm from './components/dialog/add-schedule-form';
 
 const queryClient = new QueryClient();
 
-function App({ presenter }) {
-	const [whichPage, setWhichPage] = useState(); //receipts가 init된 상태
-	const [lists, setLists] = useState([]);
+function App() {
+	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+	const [isVisibleAddScheduleBtn, setIsVisibleAddScheduleBtn] = useState(true);
+	const [isVisibleExitBtn, setIsVisibleExitBtn] = useState(false);
+	const [isPageCollapsed, setIsPageCollapsed] = useState(true);
 
-	useEffect(() => {
-		getLists().then(lists => {
-			const receiptsContained = lists.map(list => _initReceipts(list));
-			return setLists(receiptsContained);
-		});
-
-		function _initReceipts(list) {
-			if (list.receipts == null) {
-				return {
-					...list,
-					receipts: {
-						food: [],
-						mart: [],
-						car: [],
-						ticket: [],
-						reservation: [],
-					},
-				};
-			}
-
-			let receipts = { ...list.receipts };
-
-			if (!list.receipts.mart) {
-				receipts = { ...receipts, mart: [] };
-			}
-			if (!list.receipts.car) {
-				receipts = { ...receipts, car: [] };
-			}
-			if (!list.receipts.ticket) {
-				receipts = { ...receipts, ticket: [] };
-			}
-			if (!list.receipts.reservation) {
-				receipts = { ...receipts, reservation: [] };
-			}
-			return { ...list, receipts };
-		}
-	}, []);
-
-	function handleWhichPage(list) {
-		!list && setWhichPage(null);
-		setWhichPage(list);
+	function handleDisplayLists(isDisplayLists) {
+		setIsVisibleExitBtn(!isDisplayLists);
+		setIsVisibleAddScheduleBtn(isDisplayLists);
+		setIsPageCollapsed(isDisplayLists);
 	}
 
-	/* 	function handleAddSchedule(schedule) {
-		!schedule && setIsOpen(true);
-		setIsOpen(false);
-	} */
+	function popUpDialog() {
+		setIsAddFormOpen(!isAddFormOpen);
+	}
 
 	return (
-		<div className=''>
-			<AppHeader
-				title='🏔 BETA'
-				handleWhichPage={handleWhichPage}
-				isPage={!!whichPage}
-			/>
+		<div className='flex flex-col h-full'>
+			<div>
+				<AppHeader
+					title='🏔 BETA'
+					handleDisplayLists={handleDisplayLists}
+					isVisibleExitBtn={isVisibleExitBtn}
+				/>
+			</div>
 
 			<QueryClientProvider client={queryClient}>
-				{/* 
-				whichPage가 있다면 lists 목록을,
-				whichPage가 없다면 해당 list의 list-page를 보여줌
-				*/}
-				<div>
-					{whichPage && <ListPage list={whichPage} />}
-					{!whichPage && <Lists handleWhichPage={handleWhichPage} />}
+				<div className='flex-auto'>
+					<Lists
+						handleDisplayLists={handleDisplayLists}
+						isPageCollapsed={isPageCollapsed}
+					/>
 				</div>
 			</QueryClientProvider>
+
+			{isVisibleAddScheduleBtn && (
+				<div className='w-full text-center sticky bottom-0 self-end py-2'>
+					<AppButton
+						name='모임 추가'
+						callback={() => {
+							setIsAddFormOpen(true);
+						}}
+					/>
+				</div>
+			)}
+
+			{isAddFormOpen && (
+				<div className='fixed top-1/2 -translate-y-1/2'>
+					<AddScheduleForm
+						setIsDialogOpen={setIsAddFormOpen}
+						popUpDialog={popUpDialog}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -51,15 +51,15 @@ const Container = styled.div`
 	}
 `; */
 
-function ListPage({ list }) {
-	const presenter = new List(list);
+function ListPage({ page }) {
+	const presenter = new List(page);
 
 	const [account, setAccount] = useState();
 	const [total, setTotal] = useState(0);
 
 	useEffect(() => {
-		setAccount(list.account);
-		setTotal(presenter.getWholeTotal(list));
+		setAccount(page.account);
+		setTotal(presenter.getWholeTotal(page));
 	}, []);
 
 	function sumPayment(payment) {
@@ -82,7 +82,7 @@ function ListPage({ list }) {
 			person,
 		};
 
-		addAccount(list.id, accountInfo);
+		addAccount(page.id, accountInfo);
 		setAccount(accountInfo);
 	};
 
@@ -92,20 +92,20 @@ function ListPage({ list }) {
 
 	return (
 		<Container>
-			<h2>💘 {list.title} 정산 페이지입니다!</h2>
+			<h2>💘 {page.title} 정산 페이지입니다!</h2>
 
-			{Object.keys(list.receipts).map(category => (
+			{Object.keys(page.receipts).map(category => (
 				<PageComponent
 					sumPayment={sumPayment}
-					title={controls.generateTitle(list, category)}
+					title={controls.generateTitle(page, category)}
 					items={
-						list.receipts[category]
-							? Object.values(list.receipts[category])
+						page.receipts[category]
+							? Object.values(page.receipts[category])
 							: []
 					}
 					presenter={presenter}
-					key={Object.keys(list.receipts).indexOf(category)}
-					list={list}
+					key={Object.keys(page.receipts).indexOf(category)}
+					page={page}
 					category={category}
 				/>
 			))}
@@ -116,12 +116,12 @@ function ListPage({ list }) {
 				<h3>개인별 정산예정 금액:</h3>
 
 				<ul>
-					{list.whoAre.map(user => (
+					{page.whoAre.map(user => (
 						<PersonalPayment
 							key={user.id}
 							user={user}
 							total={total}
-							list={list}
+							page={page}
 						/>
 					))}
 				</ul>

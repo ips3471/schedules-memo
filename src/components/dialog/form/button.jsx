@@ -1,7 +1,7 @@
 import React from 'react';
-function FormButton({ name, type, callback }) {
+function FormButton({ name, type, callback = () => {} }) {
 	return (
-		<button type={type} onClick={() => callback()}>
+		<button className='flex-1 p-2' type={type} onClick={() => callback()}>
 			{name}
 		</button>
 	);

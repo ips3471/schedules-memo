@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
+import FormHeader from './dialog/form/header';
 import Header from './header/app';
 
 const Form = styled.form`
@@ -19,12 +20,13 @@ const ButtonContainer = styled.div`
 		}
 	}
 `;
+
 function ReceiptAdd({
 	title,
 	updateReceipts,
 	setIsDialogOpen,
 	category,
-	list,
+	page,
 }) {
 	const [isComplete, setIsComplete] = useState(false);
 	const nameRef = useRef();
@@ -61,8 +63,7 @@ function ReceiptAdd({
 		const { name, payment, where } = form;
 
 		const item = {
-			id: Date.now().toString(),
-			name: name || list.host,
+			name: name || page.host,
 			where,
 			payment,
 			category,
@@ -73,10 +74,10 @@ function ReceiptAdd({
 
 	return (
 		<>
-			<Header title={title + ' 계산내역 추가'} />
-			<Form onSubmit={onAddClick} id='receiptForm'>
+			<FormHeader title={title + ' 계산내역 추가'} />
+			<form onSubmit={onAddClick} id='receiptForm'>
 				<select onChange={handleChange} name='name' ref={nameRef}>
-					{list.whoAre.map(user => (
+					{page.whoAre.map(user => (
 						<option form='receiptForm' onChange={handleChange} key={user.id}>
 							{user.name}
 						</option>
@@ -98,7 +99,7 @@ function ReceiptAdd({
 					name='payment'
 					onKeyUp={() => observeFormComplete()}
 				/>
-				<ButtonContainer isComplete={isComplete}>
+				<div>
 					<button
 						type='button'
 						onClick={() => {
@@ -110,8 +111,8 @@ function ReceiptAdd({
 					<button type='submit' className='submit'>
 						확인
 					</button>
-				</ButtonContainer>
-			</Form>
+				</div>
+			</form>
 		</>
 	);
 }

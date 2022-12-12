@@ -16,13 +16,13 @@ class DatePresenter {
 	getMonth() {
 		const month = this.date.getMonth() + 1;
 
-		return this._addZero(month) + month + '월';
+		return this.#addZero(month) + month + '월';
 	}
 
 	getDay() {
 		const day = this.date.getDate();
 
-		return this._addZero(day) + day + '일';
+		return this.#addZero(day) + day + '일';
 	}
 
 	getWeek() {
@@ -33,7 +33,7 @@ class DatePresenter {
 		return diff > 0 && diff <= 4;
 	}
 
-	_addZero(number) {
+	#addZero(number) {
 		if (this._isSingleDigit(number)) return '0';
 		return '';
 	}

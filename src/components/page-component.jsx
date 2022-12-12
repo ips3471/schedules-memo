@@ -64,7 +64,7 @@ function PageComponent({
 	title,
 	items,
 	presenter,
-	list,
+	page,
 	category,
 	sumPayment,
 }) {
@@ -76,7 +76,7 @@ function PageComponent({
 		setReceipts(items => {
 			setIsDialogOpen(false);
 			let updated = [...items, receipt];
-			addReceipt(list.id, category, receipt);
+			addReceipt(page.id, category, receipt);
 			return updated;
 		});
 		setTotal(prev => prev + Number(receipt.payment));
@@ -84,9 +84,9 @@ function PageComponent({
 	}
 
 	useEffect(() => {
-		// const total = presenter.getTotalWithCategory(list, category);
+		// const total = presenter.getTotalWithCategory(page, category);
 		// console.log('total of ', category, total);
-		setTotal(presenter.sumCategory(category, list) || 0);
+		setTotal(presenter.sumCategory(category, page) || 0);
 		sumPayment();
 	}, []);
 
@@ -101,9 +101,6 @@ function PageComponent({
 					receipts.map(item => <ReceiptItem key={item.id} item={item} />)}
 			</ul>
 			<CategoryTotal total={total} title={title} />
-			{/* 			<div className='recipt'>
-				<button>영수증</button>
-			</div> */}
 			<div className='break'>
 				<span className='break-item'></span>
 			</div>
@@ -114,7 +111,7 @@ function PageComponent({
 						title={title}
 						setIsDialogOpen={setIsDialogOpen}
 						category={category}
-						list={list}
+						page={page}
 					/>
 				)}
 			</DialogContainer>

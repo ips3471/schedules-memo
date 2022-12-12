@@ -1,6 +1,6 @@
 function FormHeader({ title }) {
 	return (
-		<div className=''>
+		<div className='text-left p-2'>
 			<h2 className=''>{title}</h2>
 		</div>
 	);

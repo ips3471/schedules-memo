@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SubmitPresenter from '../../presenter/submit';
 import FormSchedule from './form/content';
 import FormHeader from './form/header';
+import FormButton from './form/button';
 
 const _defaultForm = {
 	title: '',
@@ -15,12 +16,10 @@ const _defaultForm = {
 function AddScheduleForm({ popUpDialog }) {
 	const [form, setForm] = useState(_defaultForm);
 
-	function handleSubmit(e, isComplete) {
-		e.preventDefault();
-
+	function handleSubmit() {
 		const presenter = new SubmitPresenter(form);
 		if (!presenter.checkValidities()) return;
-		isComplete && presenter.addSchedule();
+		presenter.addSchedule();
 		popUpDialog();
 	}
 
@@ -33,15 +32,26 @@ function AddScheduleForm({ popUpDialog }) {
 	}
 
 	return (
-		<div>
+		<form
+			onSubmit={e => {
+				e.preventDefault();
+				handleSubmit();
+			}}
+			className=''
+		>
 			<FormHeader title='모임추가' />
-			<FormSchedule
-				handleInputChange={handleInputChange}
-				handleSubmit={handleSubmit}
-				form={form}
-				popUpDialog={popUpDialog}
-			/>
-		</div>
+			<FormSchedule handleInputChange={handleInputChange} form={form} />
+			<div className='flex justify-between'>
+				<FormButton
+					name='취소'
+					type='button'
+					callback={() => {
+						popUpDialog();
+					}}
+				/>
+				<FormButton name='확인' type='submit' />
+			</div>
+		</form>
 	);
 }
 

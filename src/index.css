@@ -16,10 +16,11 @@ body {
 }
 
 #root {
-	@apply w-full max-w-screen-sm;
+	@apply w-full h-full max-w-screen-sm;
 }
 
-input {
+input,
+select {
 	@apply w-full text-gray-900;
 }
 
