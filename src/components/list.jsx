@@ -22,7 +22,13 @@ function List({ list, setSelectedList }) {
 	}
 
 	return (
-		<div className='flex items-center justify-between px-appBody'>
+		<div
+			className={
+				list.state === '완료'
+					? 'flex items-center justify-between px-appBody opacity-40'
+					: 'flex items-center justify-between px-appBody'
+			}
+		>
 			<DateItem className='' date={date} />
 			<PlaceItem title={title} place={place} />
 			<span className='basis-10'>{howMany}명</span>

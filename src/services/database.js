@@ -1,5 +1,5 @@
 import firebaseApp from '../api/firebase';
-import { set, ref, getDatabase, get } from 'firebase/database';
+import { set, ref, getDatabase, get, update } from 'firebase/database';
 import { v4 as uuid } from 'uuid';
 
 const database = getDatabase(firebaseApp);
@@ -19,6 +19,10 @@ export async function addList(list) {
 		})
 		.catch(console.error);
 	return res;
+}
+
+export async function updateList(list) {
+	update(ref(database, `schedules/${list.id}`), list);
 }
 
 export async function addReceipt(listId, category, receipt) {

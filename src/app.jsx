@@ -16,6 +16,10 @@ function App() {
 		getLists().then(setSchedules);
 	}, [selectedList]);
 
+	const closePage = () => {
+		setSelectedList(null);
+	};
+
 	const handleAddSchedule = async form => {
 		const submitPresenter = new SubmitPresenter(form);
 		if (!submitPresenter.checkValidities()) return;
@@ -49,7 +53,7 @@ function App() {
 				{!selectedList && schedules && (
 					<Lists schedules={schedules} setSelectedList={setSelectedList} />
 				)}
-				{selectedList && <ListPage list={selectedList} />}
+				{selectedList && <ListPage list={selectedList} closePage={closePage} />}
 			</div>
 
 			{!selectedList && (

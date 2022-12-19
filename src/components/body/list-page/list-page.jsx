@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import AppButton from '../../button/button';
 import PageComponent from '../../page-component';
 import * as controls from '../../controls/controls';
-import { addAccount } from '../../../services/database';
+import { addAccount, updateList } from '../../../services/database';
 import WholeTotal from '../../wholeTotal';
 import PersonalPayment from './personal-payment';
 import AddReceiptForm from '../../add-receipt-form';
 import SubmitPresenter from '../../../presenter/submit';
 
-function ListPage({ list }) {
+function ListPage({ list, closePage }) {
 	const [isDialogOpen, setIsDialogOpen] = useState({
 		state: false,
 		category: null,
@@ -93,7 +93,19 @@ function ListPage({ list }) {
 	};
 
 	const handleFinish = () => {
-		console.log('you should implements this function');
+		const result = window.confirm(
+			'참여자 모두 입금을 완료하였나요? 정산을 종료합니다',
+		);
+		if (result) {
+			setListItem(prev => {
+				const updated = { ...prev, state: '완료' };
+				console.log(updated);
+				updateList(updated);
+				return updated;
+			});
+		}
+
+		closePage();
 	};
 
 	return (
