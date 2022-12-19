@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FormSchedule from './form/content';
+import FormSchedule from './form/form-schedule';
 import FormContainer from './form/container';
 
 const _defaultForm = {

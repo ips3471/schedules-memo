@@ -11,16 +11,26 @@ export async function addList(list) {
 		id,
 	};
 	set(ref(database, `schedules/${id}`), updated);
-	return updated;
+	const res = await get(ref(database, `schedules/${id}`))
+		.then(snapshop => {
+			if (snapshop.exists()) {
+				return _initReceipts(snapshop.val());
+			}
+		})
+		.catch(console.error);
+	return res;
 }
 
-export async function addReceipt(listId, category, item) {
+export async function addReceipt(listId, category, receipt) {
+	console.log(listId, category, receipt);
 	const id = uuid();
-	set(ref(database, `schedules/${listId}/receipts/${category}/${id}`), {
-		...item,
+	const updated = {
+		...receipt,
 		id,
-		payment: parseInt(item.payment),
-	}).then(console.log);
+		payment: parseInt(receipt.payment),
+	};
+	set(ref(database, `schedules/${listId}/receipts/${category}/${id}`), updated);
+	return updated;
 }
 
 export async function getLists() {
@@ -30,15 +40,13 @@ export async function getLists() {
 				const scheduleArr = Object.values(snapshop.val());
 				return scheduleArr.map(list => _initReceipts(list));
 			}
-			return [];
 		})
 		.catch(console.error);
 }
 
 export async function addAccount(listId, accountInfo) {
-	set(ref(database, `schedules/${listId}/account`), accountInfo).then(
-		console.log,
-	);
+	console.log('add accoount');
+	set(ref(database, `schedules/${listId}/account`), accountInfo);
 }
 
 function _initReceipts(list) {

@@ -13,13 +13,14 @@ function App() {
 	const [selectedList, setSelectedList] = useState(null);
 
 	useEffect(() => {
-		getLists().then(data => setSchedules(data));
-	}, []);
+		getLists().then(setSchedules);
+	}, [selectedList]);
 
 	const handleAddSchedule = async form => {
 		const submitPresenter = new SubmitPresenter(form);
 		if (!submitPresenter.checkValidities()) return;
 		const schedule = await submitPresenter.addSchedule();
+		console.log('data', schedule);
 		setSchedules(prev => [...prev, schedule]);
 		toggleDialog();
 	};
@@ -38,15 +39,21 @@ function App() {
 				/>
 			</div>
 
-			<div className='flex-auto'>
+			<div
+				className={
+					isAddFormOpen
+						? 'flex-auto blur-sm pointer-events-none transition-all'
+						: 'flex-auto transition-all'
+				}
+			>
 				{!selectedList && schedules && (
 					<Lists schedules={schedules} setSelectedList={setSelectedList} />
 				)}
-				{selectedList && <ListPage page={selectedList} />}
+				{selectedList && <ListPage list={selectedList} />}
 			</div>
 
 			{!selectedList && (
-				<div className='w-full text-center sticky bottom-0 self-end py-2'>
+				<div className='w-full text-center sticky bottom-0 self-end py-2 bg-orange-700'>
 					<AppButton
 						name='모임 추가'
 						callback={() => {

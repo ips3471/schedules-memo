@@ -11,6 +11,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	width: 100vw;
 	height: 100vh;
+	overflow-x: hidden;
 	@apply flex flex-col items-center;
 	@apply bg-zinc-900 text-gray-50;
 }
@@ -21,7 +22,7 @@ body {
 
 input,
 select {
-	@apply w-full text-gray-900;
+	@apply w-full text-gray-900 h-10 p-2;
 }
 
 code {

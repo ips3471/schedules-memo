@@ -4,8 +4,7 @@ const category3 = '티켓/입장료';
 const category4 = '주유/주차비';
 const category5 = '숙소/기타';
 
-export function generateTitle(list, receiptItem) {
-	const { self, mart, ticket, car, reservation } = list.receipts;
+export function generateTitle(receiptItem) {
 	switch (receiptItem) {
 		case 'food':
 			return category1;
@@ -23,7 +22,7 @@ export function generateTitle(list, receiptItem) {
 			return category5;
 			break;
 		default:
-			throw new Error('item not matched');
+			console.error(`item not matched: check '${receiptItem}'`);
 	}
 }
 
@@ -73,9 +72,7 @@ export function getUserTotal(list, userName) {
 		? Object.values(categories.mart).filter(item => item.name === userName) //
 		: [];
 	const ticket = categories.ticket
-		? Object.values(categories.ticket).filter(
-				item => item.name === userName,
-		  ) //
+		? Object.values(categories.ticket).filter(item => item.name === userName) //
 		: [];
 	const car = categories.car
 		? Object.values(categories.car).filter(item => item.name === userName) //

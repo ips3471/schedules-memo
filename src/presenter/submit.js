@@ -1,18 +1,28 @@
-import { addList } from '../services/database';
-
+import { addList, addReceipt } from '../services/database';
+import { v4 as uuid } from 'uuid';
 class SubmitPresenter {
 	constructor(form) {
 		this.form = form;
 		this._minTitleLength = 3;
 		this._maxMemberSize = 20;
-		this.spllitedNames = this.form.people.split(',');
 	}
 
 	async addSchedule() {
 		const schedule = this.getScheduleItem();
-		const list = await addList(schedule);
-		console.log(list);
-		return list;
+		const response = await addList(schedule);
+		console.log(response);
+		return response;
+	}
+
+	async addReceipt(listId, category) {
+		const receipt = {
+			name: this.form.name,
+			where: this.form.where,
+			payment: this.form.payment,
+		};
+		console.log(listId, category);
+		const response = await addReceipt(listId, category, receipt);
+		return response;
 	}
 
 	checkValidities() {
@@ -42,8 +52,8 @@ class SubmitPresenter {
 	}
 
 	#checkMemberValidity() {
-		if (this.spllitedNames.length !== Number(this.form.howMany)) {
-			console.log(this.spllitedNames.length);
+		if (this.form.people.split(',').length !== Number(this.form.howMany)) {
+			console.log(this.form.people.split(',').length);
 			console.log('howmany', this.form.howMany);
 			alert('참여인원의 수와 입력된 참여자의 수가 일치하지 않습니다');
 			return false;
@@ -52,7 +62,9 @@ class SubmitPresenter {
 	}
 
 	getScheduleItem() {
-		const whoAre = this.spllitedNames.map(name => _getTrimmedObject(name));
+		const whoAre = this.form.people
+			.split(',')
+			.map(name => _getTrimmedObject(name));
 
 		return {
 			title: this.form.title,
@@ -69,7 +81,7 @@ class SubmitPresenter {
 		function _getTrimmedObject(name) {
 			return {
 				name: name.trim(),
-				id: Date.now().toString(),
+				id: uuid(),
 			};
 		}
 	}

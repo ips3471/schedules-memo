@@ -10,6 +10,7 @@ function FormSchedule({ handleInputChange, form }) {
 				name={name}
 				value={form[name]}
 				min={type === 'date' ? currDate : ''}
+				autoComplete='off'
 				required
 			></input>
 		);

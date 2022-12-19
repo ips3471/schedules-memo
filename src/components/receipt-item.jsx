@@ -7,9 +7,9 @@ function ReceiptItem({ item }) {
 		console.log('upload');
 	}
 	return (
-		<li className='category-item'>
-			<span className='info'>
-				<span className='info__name'>{name}</span>
+		<li className='flex justify-between'>
+			<span className=''>
+				<span className='mr-4'>{name}</span>
 				<span className='info__shop'>
 					{where} <button onClick={handleUploadReceipt}>📜</button>
 				</span>
