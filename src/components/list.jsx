@@ -2,11 +2,6 @@ import AppButton from './button/button';
 import DateItem from './body/list/date';
 import PlaceItem from './body/list/place';
 
-/*
-곧 다가오는 일정일 경우 하이라이트
-diffDay <= 4 ? 'orange' : ''
- */
-
 function List({ list, setSelectedList }) {
 	const { title, howMany, place, date, state, code } = list;
 

@@ -98,7 +98,13 @@ function ListPage({ list }) {
 
 	return (
 		<>
-			<div className='px-appBody flex flex-col h-full'>
+			<div
+				className={
+					isDialogOpen.state
+						? 'px-appBody flex flex-col h-full pointer-events-none'
+						: 'px-appBody flex flex-col h-full'
+				}
+			>
 				<h2 className='py-2 font-bold text-xl mb-2'>
 					💘 {list.title} 정산 페이지입니다!
 				</h2>
@@ -136,7 +142,7 @@ function ListPage({ list }) {
 						</ul>
 					</div>
 				</div>
-				<div className='w-full py-2 flex justify-between sticky bottom-0 self-end bg-zinc-900'>
+				<div className='w-full py-4 flex justify-between sticky bottom-0 self-end bg-zinc-900'>
 					{listItem.account && (
 						<div className='w-full flex justify-between'>
 							<span className=''>
