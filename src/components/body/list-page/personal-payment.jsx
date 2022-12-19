@@ -3,54 +3,35 @@ import PersonToManage from '../../personToManage';
 import PersonToPayBack from '../../personToPayBack';
 import PersonToPay from '../../personToPay';
 import UserPayment from '../../../presenter/user-payment';
-import * as controls from '../../controls/controls';
 
-function PersonalPayment({ user, total, page }) {
-	const presenter = new UserPayment(total, user, page);
+function PersonalPayment({ user, host, categoryTotal, equal }) {
+	const presenter = new UserPayment(categoryTotal);
 
-	const cost =
-		total / page.whoAre.length - presenter.getUserTotal(page, user.name);
+	const userTotal = presenter.userTotal(user);
 
 	return (
 		<li>
-			{user.name === page.host ? '👑' : '🙂'}
+			{user.name === host ? '👑' : '🙂'}
 
-			{user.name === page.host && (
-				<PersonToManage
-					username={user.name}
-					total={total}
-					cost={cost}
-					page={page}
-					member={page.whoAre.length}
-				/>
+			{user.name === host && (
+				<PersonToManage username={user.name} cost={userTotal} />
 			)}
 
-			{user.name !== page.host && cost > 0 && (
+			{user.name !== host && equal - userTotal > 0 && (
 				<PersonToPay
-					total={total}
-					page={page}
-					cost={cost}
-					member={page.whoAre.length}
+					cost={equal - userTotal}
 					username={user.name}
-					host={page.host}
+					host={host}
 				/>
 			)}
 
-			{user.name !== page.host && cost < 0 && (
+			{user.name !== host && equal - userTotal < 0 && (
 				<PersonToPayBack
 					username={user.name}
-					host={page.host}
-					toPayBack={cost}
+					host={host}
+					toPayBack={userTotal - equal}
 				/>
 			)}
-
-			{user.name !== page.host &&
-				cost == 0 &&
-				controls.toLocalCurrency(
-					total,
-					page,
-					presenter.getUserTotal(page.id, user.name),
-				)}
 		</li>
 	);
 }

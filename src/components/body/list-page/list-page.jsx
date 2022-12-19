@@ -52,9 +52,12 @@ function ListPage({ list }) {
 			const categoryName = isDialogOpen.category;
 			return {
 				...prev,
-				[categoryName]: {
-					...prev[categoryName],
-					[receipt.id]: receipt,
+				receipts: {
+					...prev.receipts,
+					[categoryName]: {
+						...prev[categoryName],
+						[receipt.id]: receipt,
+					},
 				},
 			};
 		});
@@ -124,8 +127,9 @@ function ListPage({ list }) {
 									<PersonalPayment
 										key={user.id}
 										user={user}
-										total={total}
-										page={list}
+										categoryTotal={categoryTotal}
+										host={list.host}
+										equal={total / list.whoAre.length}
 									/>
 								);
 							})}

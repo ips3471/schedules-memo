@@ -1,11 +1,23 @@
 class UserPayment {
-	constructor(total, user, list) {
-		this.username = user.name;
-		this.total = total;
-		this.allUsers = list.whoAre.length;
+	constructor(categoryTotal) {
+		this.categoryTotal = categoryTotal;
 	}
 
-	getUserTotal(list, userName) {
+	userTotal(user) {
+		return this.#sortByUser(user).reduce(
+			(categoryAcc, curr) =>
+				categoryAcc + curr.reduce((userAcc, curr) => userAcc + curr.payment, 0),
+			0,
+		);
+	}
+
+	#sortByUser(user) {
+		return Object.keys(this.categoryTotal).map(key =>
+			this.categoryTotal[key].filter(i => i.name === user.name),
+		);
+	}
+
+	/* getUserTotal(list, userName) {
 		const categories = list.receipts;
 		if (!categories) return;
 		const reservation = categories.reservation
@@ -33,7 +45,7 @@ class UserPayment {
 			car.reduce((prev, curr) => prev + Number(curr.payment), 0) +
 			food.reduce((prev, curr) => prev + Number(curr.payment), 0)
 		);
-	}
+	} */
 }
 
 export default UserPayment;

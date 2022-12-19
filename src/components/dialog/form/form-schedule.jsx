@@ -10,6 +10,11 @@ function FormSchedule({ handleInputChange, form }) {
 				name={name}
 				value={form[name]}
 				min={type === 'date' ? currDate : ''}
+				max={
+					type === 'date'
+						? Number(currDate.slice(0, 4)) + 1 + currDate.slice(4)
+						: ''
+				}
 				autoComplete='off'
 				required
 			></input>
