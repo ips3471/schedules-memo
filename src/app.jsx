@@ -35,7 +35,7 @@ function App() {
 
 	return (
 		<div className='flex flex-col h-full'>
-			<div>
+			<div className='sticky top-0'>
 				<AppHeader
 					title='🏔 BETA'
 					setSelectedList={setSelectedList}

@@ -7,6 +7,8 @@ function FormContainer({
 	onCancelCallback,
 	formTitle,
 	children,
+	submitName = '확인',
+	cancelName = '취소',
 }) {
 	const onSubmit = e => {
 		e.preventDefault();
@@ -20,13 +22,13 @@ function FormContainer({
 
 			<div className='flex justify-between'>
 				<FormButton
-					name='취소'
+					name={cancelName}
 					type='button'
 					callback={() => {
 						onCancelCallback();
 					}}
 				/>
-				<FormButton name='확인' type='submit' />
+				<FormButton name={submitName} type='submit' />
 			</div>
 		</form>
 	);

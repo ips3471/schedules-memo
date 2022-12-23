@@ -20,7 +20,6 @@ class SubmitPresenter {
 			where: this.form.where,
 			payment: this.form.payment,
 		};
-		console.log(listId, category);
 		const response = await addReceipt(listId, category, receipt);
 		return response;
 	}

@@ -9,6 +9,7 @@ function PageComponent({
 	setIsDialogOpen,
 	receiptsByCategory,
 	categoryTotal,
+	handleUpdatePicture,
 }) {
 	const total = categoryTotal[category]
 		? categoryTotal[category].reduce((acc, curr) => acc + curr.payment, 0)
@@ -26,14 +27,19 @@ function PageComponent({
 		<div className='mb-2'>
 			<div className='flex justify-between'>
 				<h3 className='font-bold'>{title}</h3>
-				<button className='scale-125' onClick={onAddClick}>
-					✍
+				<button className='' onClick={onAddClick}>
+					<span className='text-lg'>✍</span>
 				</button>
 			</div>
 			<ul className='py-1'>
 				{receiptsByCategory &&
 					receiptsByCategory.map(item => (
-						<ReceiptItem key={item.id} item={item} />
+						<ReceiptItem
+							key={item.id}
+							item={item}
+							handleUpdatePicture={handleUpdatePicture}
+							category={category}
+						/>
 					))}
 			</ul>
 			<CategoryTotal total={total} title={title} />

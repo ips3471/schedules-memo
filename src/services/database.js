@@ -1,5 +1,5 @@
 import firebaseApp from '../api/firebase';
-import { set, ref, getDatabase, get, update } from 'firebase/database';
+import { set, ref, getDatabase, get, push, update } from 'firebase/database';
 import { v4 as uuid } from 'uuid';
 
 const database = getDatabase(firebaseApp);
@@ -26,13 +26,13 @@ export async function updateList(list) {
 }
 
 export async function addReceipt(listId, category, receipt) {
-	console.log(listId, category, receipt);
 	const id = uuid();
 	const updated = {
 		...receipt,
 		id,
 		payment: parseInt(receipt.payment),
 	};
+	console.log('updated', updated);
 	set(ref(database, `schedules/${listId}/receipts/${category}/${id}`), updated);
 	return updated;
 }
@@ -51,6 +51,19 @@ export async function getLists() {
 export async function addAccount(listId, accountInfo) {
 	console.log('add accoount');
 	set(ref(database, `schedules/${listId}/account`), accountInfo);
+}
+
+export async function updateImage(item, url) {
+	const { listId, category, id } = item;
+	const updated = {
+		...item,
+		url,
+	};
+	console.log('updated', updated);
+	update(
+		ref(database, `schedules/${listId}/receipts/${category}/${id}`),
+		updated,
+	);
 }
 
 function _initReceipts(list) {
