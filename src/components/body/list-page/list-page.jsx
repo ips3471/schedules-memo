@@ -19,18 +19,7 @@ function ListPage({ list, closePage }) {
 	const [total, setTotal] = useState(0);
 	const [pictureTarget, setPictureTarget] = useState();
 
-	const handleInputClick = inputRef => {
-		console.log('onInputClick');
-		inputRef.current.click();
-	};
-
-	useEffect(() => {
-		console.log('updated list item', listItem);
-	}, [listItem]);
-
 	const handleDisplayForm = (category, item) => {
-		console.log('list-item', item);
-		console.log(category ? 'submit process' : 'cancel process');
 		if (!category || !item) {
 			setPictureTarget(null);
 			return;
@@ -49,17 +38,11 @@ function ListPage({ list, closePage }) {
 			return;
 		}
 
-		console.log(item.url ? 'submit process' : 'cancel process');
-
-		console.log('handleUpdatePicture item', item);
-
 		const { category, id, url } = item;
 
-		const categoryKey = Object.keys(list.receipts[category]).filter(
-			key => list.receipts[category][key].id === id,
+		const categoryKey = Object.keys(listItem.receipts[category]).filter(
+			key => listItem.receipts[category][key].id === id,
 		)[0];
-
-		console.log('state be changing', list.receipts[category][categoryKey]);
 
 		// return;
 		setPictureTarget(item);
@@ -150,8 +133,6 @@ function ListPage({ list, closePage }) {
 		};
 
 		addAccount(list.id, accountInfo);
-		let updated = { ...listItem, account: accountInfo };
-		console.log('updated', updated);
 		setListItem(prev => ({ ...prev, account: accountInfo }));
 	};
 
@@ -177,7 +158,7 @@ function ListPage({ list, closePage }) {
 					target={pictureTarget}
 				/>
 			)}
-			<div className='z-0'>
+			<div className={list.state === '완료' ? 'opacity-50' : ''}>
 				<div
 					className={
 						isDialogOpen.state
@@ -232,7 +213,10 @@ function ListPage({ list, closePage }) {
 									{listItem.account.bank} {listItem.account.account}{' '}
 									{listItem.account.person}
 								</span>
-								<AppButton name='정산끝내기' callback={handleFinish} />
+								<AppButton
+									name={list.state === '완료' ? '정산완료' : '정산끝내기'}
+									callback={handleFinish}
+								/>
 							</div>
 						)}
 						{!listItem.account && (

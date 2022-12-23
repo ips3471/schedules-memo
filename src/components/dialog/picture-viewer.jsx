@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { useRef } from 'react';
 import { uploadImage } from '../../api/uploader';
 import { updateImage } from '../../services/database';
@@ -6,6 +7,7 @@ import FormContainer from './form/container';
 
 function PictureViewer({ updatePictureCallback, target }) {
 	const inputRef = useRef();
+	const [isloading, setIsLoading] = useState(false);
 
 	const { where, url } = target;
 
@@ -15,8 +17,10 @@ function PictureViewer({ updatePictureCallback, target }) {
 
 	const onChangeCapture = async e => {
 		const picture = e.target.files && e.target.files[0];
+		setIsLoading(true);
 		const url = await uploadImage(picture);
 		updateImage(target, url);
+		setIsLoading(false);
 
 		updatePictureCallback({ ...target, url });
 	};
@@ -33,7 +37,8 @@ function PictureViewer({ updatePictureCallback, target }) {
 				<div>
 					{!url && (
 						<span className='py-4 px-2 inline-block'>
-							아직 등록된 영수증이 없습니다
+							{isloading && '사진을 업로드중입니다'}
+							{!isloading && '아직 등록된 영수증이 없습니다'}
 						</span>
 					)}
 					{url && <img src={url} alt='영수증사진' />}

@@ -24,7 +24,6 @@ function App() {
 		const submitPresenter = new SubmitPresenter(form);
 		if (!submitPresenter.checkValidities()) return;
 		const schedule = await submitPresenter.addSchedule();
-		console.log('data', schedule);
 		setSchedules(prev => [...prev, schedule]);
 		toggleDialog();
 	};

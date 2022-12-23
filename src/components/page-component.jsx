@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
 import ReceiptItem from './receipt-item';
-import { addReceipt } from '../services/database';
 import CategoryTotal from './categoryTotal';
 
 function PageComponent({
@@ -16,9 +14,7 @@ function PageComponent({
 		: 0;
 
 	const onAddClick = () => {
-		console.log('clicked add receipt');
 		setIsDialogOpen(prev => {
-			console.log('isDialogOpen', prev);
 			return { ...prev, state: true, category: category };
 		});
 	};

@@ -49,7 +49,7 @@ export async function getLists() {
 }
 
 export async function addAccount(listId, accountInfo) {
-	console.log('add accoount');
+	console.log('add accoount: ', listId, accountInfo);
 	set(ref(database, `schedules/${listId}/account`), accountInfo);
 }
 
