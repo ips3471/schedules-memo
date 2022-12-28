@@ -136,7 +136,12 @@ function ListPage({ list, closePage }) {
 		setListItem(prev => ({ ...prev, account: accountInfo }));
 	};
 
+	console.log(list);
 	const handleFinish = () => {
+		if (list.state === '완료') {
+			alert('이미 정산이 완료된 페이지입니다');
+			return;
+		}
 		const result = window.confirm(
 			'참여자 모두 입금을 완료하였나요? 정산을 종료합니다',
 		);
