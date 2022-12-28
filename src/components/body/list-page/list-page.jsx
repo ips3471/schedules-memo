@@ -157,12 +157,6 @@ function ListPage({ list, closePage }) {
 
 	return (
 		<>
-			{pictureTarget && (
-				<PictureViewer
-					updatePictureCallback={handleUpdatePicture}
-					target={pictureTarget}
-				/>
-			)}
 			<div className={list.state === '완료' ? 'opacity-50' : ''}>
 				<div
 					className={
@@ -234,15 +228,21 @@ function ListPage({ list, closePage }) {
 						)}
 					</div>
 				</div>
+			</div>
+			<div className='max-w-screen-sm max-h-screen w-full fixed top-1/2 -translate-y-1/2'>
+				{pictureTarget && (
+					<PictureViewer
+						updatePictureCallback={handleUpdatePicture}
+						target={pictureTarget}
+					/>
+				)}
 				{isDialogOpen.state && (
-					<div className='fixed top-1/2 -translate-y-1/2'>
-						<AddReceiptForm
-							title={controls.generateTitle(isDialogOpen.category)}
-							page={list}
-							setIsDialogOpen={setIsDialogOpen}
-							handleAddReceipt={handleAddReceipt}
-						/>
-					</div>
+					<AddReceiptForm
+						title={controls.generateTitle(isDialogOpen.category)}
+						page={list}
+						setIsDialogOpen={setIsDialogOpen}
+						handleAddReceipt={handleAddReceipt}
+					/>
 				)}
 			</div>
 		</>

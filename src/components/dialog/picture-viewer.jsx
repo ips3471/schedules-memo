@@ -26,7 +26,7 @@ function PictureViewer({ updatePictureCallback, target }) {
 	};
 
 	return (
-		<div className='fixed w-full bg-zinc-900 top-1/2 -translate-y-1/2 z-50'>
+		<div className=''>
 			<FormContainer
 				formTitle={where + ' 영수증'}
 				submitName={url ? '영수증 변경' : '영수증 등록'}
@@ -34,7 +34,7 @@ function PictureViewer({ updatePictureCallback, target }) {
 				onCancelCallback={() => updatePictureCallback(null)}
 				onSubmitCallback={onInputClick}
 			>
-				<div>
+				<div className='max-h-96 overflow-y-auto'>
 					{!url && (
 						<span className='py-4 px-2 inline-block'>
 							{isloading && '사진을 업로드중입니다'}

@@ -23,13 +23,15 @@ function AddScheduleForm({ toggleDialog, handleAddSchedule }) {
 	}
 
 	return (
-		<FormContainer
-			formTitle='모임 추가'
-			onCancelCallback={toggleDialog}
-			onSubmitCallback={() => handleAddSchedule(form)}
-		>
-			<FormSchedule form={form} handleInputChange={handleInputChange} />
-		</FormContainer>
+		<div className=''>
+			<FormContainer
+				formTitle='모임 추가'
+				onCancelCallback={toggleDialog}
+				onSubmitCallback={() => handleAddSchedule(form)}
+			>
+				<FormSchedule form={form} handleInputChange={handleInputChange} />
+			</FormContainer>
+		</div>
 	);
 }
 

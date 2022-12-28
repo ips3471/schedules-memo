@@ -33,7 +33,7 @@ function App() {
 	}
 
 	return (
-		<div className='flex flex-col h-full'>
+		<div className='flex flex-col h-full w-full'>
 			<div className='sticky top-0'>
 				<AppHeader
 					title='🏔 BETA'
@@ -45,8 +45,8 @@ function App() {
 			<div
 				className={
 					isAddFormOpen
-						? 'flex-auto blur-sm pointer-events-none transition-all'
-						: 'flex-auto transition-all'
+						? 'flex-auto blur-sm pointer-events-none transition-all w-full'
+						: 'flex-auto transition-all w-full'
 				}
 			>
 				{!selectedList && schedules && (
@@ -66,15 +66,15 @@ function App() {
 				</div>
 			)}
 
-			{isAddFormOpen && (
-				<div className='fixed top-1/2 -translate-y-1/2'>
+			<div className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
+				{isAddFormOpen && (
 					<AddScheduleForm
 						setIsDialogOpen={setIsAddFormOpen}
 						toggleDialog={toggleDialog}
 						handleAddSchedule={handleAddSchedule}
 					/>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 }
