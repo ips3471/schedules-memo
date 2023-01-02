@@ -5,11 +5,24 @@ import FormContainer from './form/container';
 const _defaultForm = {
 	title: '',
 	howMany: '',
-	date: '',
+	date:
+		String(new Date().getFullYear()) +
+		'-' +
+		getFullDateFormat(new Date().getMonth() + 1) +
+		'-' +
+		getFullDateFormat(new Date().getDate()),
 	place: '',
 	people: '',
 	code: '',
 };
+
+function getFullDateFormat(monthOrDate) {
+	if (monthOrDate < 10) {
+		return String('0' + monthOrDate);
+	} else {
+		return String(monthOrDate);
+	}
+}
 
 function AddScheduleForm({ toggleDialog, handleAddSchedule }) {
 	const [form, setForm] = useState(_defaultForm);

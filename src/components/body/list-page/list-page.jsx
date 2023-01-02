@@ -136,7 +136,6 @@ function ListPage({ list, closePage }) {
 		setListItem(prev => ({ ...prev, account: accountInfo }));
 	};
 
-	console.log(list);
 	const handleFinish = () => {
 		if (list.state === '완료') {
 			alert('이미 정산이 완료된 페이지입니다');

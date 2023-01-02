@@ -17,8 +17,7 @@ function FormContainer({
 	return (
 		<form onSubmit={onSubmit}>
 			<FormHeader title={formTitle} />
-
-			{children}
+			<section className='bg-zinc-900'>{children}</section>
 
 			<div className='flex justify-between'>
 				<FormButton
