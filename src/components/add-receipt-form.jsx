@@ -7,9 +7,16 @@ function AddReceiptForm({ handleAddReceipt, page, setIsDialogOpen, title }) {
 		name: page.host,
 		where: '',
 		payment: 0,
+		whomToPay: [],
 	};
 
 	const [form, setForm] = useState(_defaultForm);
+
+	function handleWhomToPay(whomToPay) {
+		const filtered = whomToPay.filter(whom => whom.attended);
+		const mapped = filtered.map(whom => whom.id);
+		setForm(form => ({ ...form, whomToPay: mapped }));
+	}
 
 	function handleInputChange(e) {
 		e.preventDefault();
@@ -33,6 +40,7 @@ function AddReceiptForm({ handleAddReceipt, page, setIsDialogOpen, title }) {
 					page={page}
 					form={form}
 					handleInputChange={handleInputChange}
+					handleWhomToPay={handleWhomToPay}
 				/>
 			</FormContainer>
 		</>

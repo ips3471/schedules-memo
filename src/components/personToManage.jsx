@@ -3,11 +3,11 @@ import React from 'react';
 function PersonToManage({ username, cost }) {
 	return (
 		<span>
-			{username} 개인 지출:{' '}
-			{cost.toLocaleString('ko-KR', {
+			{username}{' '}
+			{`총 ${cost.toLocaleString('ko-KR', {
 				style: 'currency',
 				currency: 'KRW',
-			})}
+			})} 지출`}
 		</span>
 	);
 }

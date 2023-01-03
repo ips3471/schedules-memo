@@ -66,6 +66,11 @@ export async function updateImage(item, url) {
 	);
 }
 
+export async function updatePayment(listId, whoAre) {
+	console.log('whoAre in DB, ', whoAre);
+	set(ref(database, `schedules/${listId}/whoAre`), whoAre);
+}
+
 function _initReceipts(list) {
 	if (list.receipts == null) {
 		return {

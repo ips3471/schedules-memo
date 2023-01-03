@@ -1,10 +1,36 @@
-import { addList, addReceipt } from '../services/database';
+import { addList, addReceipt, updatePayment } from '../services/database';
 import { v4 as uuid } from 'uuid';
 class SubmitPresenter {
-	constructor(form) {
+	constructor(form, list) {
 		this.form = form;
 		this._minTitleLength = 3;
 		this._maxMemberSize = 20;
+		this.list = list;
+	}
+
+	async updatePersonalPaid() {
+		const { name, payment, whomToPay } = this.form;
+		const equalByWhomToPay = Math.ceil(payment / whomToPay.length);
+
+		const paymentCalculated = this.list.whoAre.map(who => {
+			let whoUpdated = { ...who };
+			if (whoUpdated.name === name) {
+				whoUpdated = {
+					...whoUpdated,
+					paid: whoUpdated.paid + parseInt(payment),
+				};
+			}
+			if (whomToPay.find(whom => whom === who.id)) {
+				return {
+					...whoUpdated,
+					toPay: who.toPay + equalByWhomToPay,
+				};
+			}
+			return whoUpdated;
+		});
+
+		updatePayment(this.list.id, paymentCalculated);
+		return paymentCalculated;
 	}
 
 	async addSchedule() {
@@ -15,10 +41,13 @@ class SubmitPresenter {
 	}
 
 	async addReceipt(listId, category) {
+		const { name, payment, where, whomToPay } = this.form;
+
 		const receipt = {
-			name: this.form.name,
-			where: this.form.where,
-			payment: this.form.payment,
+			name,
+			where,
+			payment,
+			whomToPay,
 		};
 		const response = await addReceipt(listId, category, receipt);
 		return response;
@@ -61,9 +90,9 @@ class SubmitPresenter {
 	}
 
 	getScheduleItem() {
-		const whoAre = this.form.people
-			.split(',')
-			.map(name => _getTrimmedObject(name));
+		const whoAre = this.form.people.split(',').map(name => {
+			return { name: _getTrimmedObject(name), toPay: 0, paid: 0, id: uuid() };
+		});
 
 		return {
 			title: this.form.title,
@@ -78,10 +107,7 @@ class SubmitPresenter {
 		};
 
 		function _getTrimmedObject(name) {
-			return {
-				name: name.trim(),
-				id: uuid(),
-			};
+			return name.trim();
 		}
 	}
 }

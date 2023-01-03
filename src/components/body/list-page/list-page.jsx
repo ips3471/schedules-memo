@@ -87,17 +87,16 @@ function ListPage({ list, closePage }) {
 	}, [categoryTotal]);
 
 	const handleAddReceipt = async form => {
-		const submitPresenter = new SubmitPresenter(form);
+		const submitPresenter = new SubmitPresenter(form, listItem);
 
-		const receipt = await submitPresenter.addReceipt(
-			list.id,
-			isDialogOpen.category,
-		);
+		const categoryName = isDialogOpen.category;
+		const receipt = await submitPresenter.addReceipt(list.id, categoryName);
+		const updatedPayment = await submitPresenter.updatePersonalPaid();
 
 		setListItem(prev => {
-			const categoryName = isDialogOpen.category;
 			return {
 				...prev,
+				whoAre: updatedPayment,
 				receipts: {
 					...prev.receipts,
 					[categoryName]: {
@@ -147,7 +146,6 @@ function ListPage({ list, closePage }) {
 		if (!result) return;
 		setListItem(prev => {
 			const updated = { ...prev, state: '완료' };
-			console.log(updated);
 			updateList(updated);
 			return updated;
 		});
@@ -190,14 +188,12 @@ function ListPage({ list, closePage }) {
 							<h3 className='py-1 font-bold'>개인별 정산예정 금액:</h3>
 
 							<ul>
-								{list.whoAre.map(user => {
+								{listItem.whoAre.map(user => {
 									return (
 										<PersonalPayment
 											key={user.id}
 											user={user}
-											categoryTotal={categoryTotal}
 											host={list.host}
-											equal={total / list.whoAre.length}
 										/>
 									);
 								})}
