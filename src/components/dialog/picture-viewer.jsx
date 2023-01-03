@@ -37,8 +37,17 @@ function PictureViewer({ updatePictureCallback, target }) {
 				<div className='max-h-96 overflow-y-auto'>
 					{!url && (
 						<span className='py-4 px-2 inline-block'>
-							{isloading && '사진을 업로드중입니다'}
-							{!isloading && '아직 등록된 영수증이 없습니다'}
+							{isloading && (
+								<>
+									<span>사진을 업로드중입니다 </span>
+									<span className='inline-block animate-spin h-5 w-5'>🕳</span>
+								</>
+							)}
+							{!isloading && (
+								<>
+									<span>아직 업로드된 영수증이 없습니다</span>
+								</>
+							)}
 						</span>
 					)}
 					{url && <img src={url} alt='영수증사진' />}
