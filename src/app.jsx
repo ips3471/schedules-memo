@@ -71,6 +71,7 @@ function App() {
 						callback={() => {
 							toggleDialog();
 						}}
+						isStretched
 					/>
 				</div>
 			)}

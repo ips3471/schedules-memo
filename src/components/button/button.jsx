@@ -1,8 +1,8 @@
 import React from 'react';
 
-function AppButton({ name, callback }) {
+function AppButton({ name, callback, isStretched }) {
 	return (
-		<button className='z-50' onClick={() => callback()}>
+		<button className={isStretched ? 'w-full' : ''} onClick={() => callback()}>
 			{name}
 		</button>
 	);
