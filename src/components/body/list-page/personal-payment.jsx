@@ -12,7 +12,7 @@ function PersonalPayment({ user, host }) {
 
 			{name === host && <PersonToManage username={name} cost={paid - toPay} />}
 
-			{name !== host && paid - toPay <= 0 && (
+			{name !== host && paid - toPay < 0 && (
 				<PersonToPay cost={paid - toPay} username={name} host={host} />
 			)}
 
