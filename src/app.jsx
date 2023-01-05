@@ -24,13 +24,22 @@ function App() {
 		const submitPresenter = new SubmitPresenter(form);
 		if (!submitPresenter.checkValidities()) return;
 		const schedule = await submitPresenter.addSchedule();
-		setSchedules(prev => [...prev, schedule]);
 		toggleDialog();
+		if (!schedules) {
+			setSchedules([schedule]);
+		} else {
+			setSchedules(prev => {
+				console.log('prev', prev);
+				return [...prev, schedule];
+			});
+		}
 	};
 
 	function toggleDialog() {
 		setIsAddFormOpen(prev => !prev);
 	}
+
+	console.log(schedules);
 
 	return (
 		<div className='flex flex-col h-full w-full'>
