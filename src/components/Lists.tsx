@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListsProps } from '../types/components/components';
-import { Schedule, ScheduleWithId } from '../types/interfaces/interfaces';
+import { ScheduleWithId } from '../types/interfaces/interfaces';
 import List from './list';
 
 function Schedules({ lists }: ListsProps) {
