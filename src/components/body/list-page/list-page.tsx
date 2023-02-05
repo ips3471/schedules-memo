@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/* import React, { useEffect, useState } from 'react';
 import AppButton from '../../button/button';
 import PageComponent from '../../page-component';
 import * as controls from '../../controls/controls';
@@ -245,3 +245,4 @@ function ListPage({ list, closePage }) {
 }
 
 export default ListPage;
+ */

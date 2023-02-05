@@ -16,7 +16,6 @@ function FormSchedule({ handleInputChange, form }) {
 						: ''
 				}
 				autoComplete='off'
-				required
 			></input>
 		);
 	}
@@ -24,12 +23,12 @@ function FormSchedule({ handleInputChange, form }) {
 		<div>
 			<div>
 				<div className=''>
-					{new Input('text', '모임 이름', 'title')}
-					{new Input('number', '참여자 수', 'howMany')}
-					{new Input('text', '참여자 이름(콤마로 구분, 모임장부터)', 'people')}
 					{new Input('date', '', 'date', new Date().toISOString().slice(0, 10))}
-					{new Input('text', '숙소 이름', 'place')}
-					{new Input('text', '참여코드', 'code')}
+					{new Input('text', '출발장소', 'from')}
+					{new Input('text', '도착장소', 'to')}
+					{new Input('text', '출발시간', 'time')}
+					{new Input('number', '리워드', 'reward')}
+					{new Input('text', '요청사항', 'mission')}
 				</div>
 			</div>
 		</div>

@@ -6,7 +6,7 @@ function DateItem({ date }) {
 	const isUpcoming = presenter.getDate().includes('D');
 
 	return (
-		<div className='flex flex-col items-center basis-20'>
+		<div className='flex flex-col items-center gap-2 basis-16 text-sm'>
 			<span className={isUpcoming ? 'text-orange-600' : ''}>
 				{presenter.getDate()}
 			</span>
