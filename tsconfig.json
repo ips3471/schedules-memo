@@ -12,8 +12,9 @@
 		"noImplicitThis": true,
 		"noImplicitAny": true,
 		"strictNullChecks": true,
-		"allowJs": true
+		"allowJs": true,
+		"outDir": "dist"
 	},
-	"include": ["src/**/*.ts*", "src/index.tsx"],
+	"include": ["src/**/*.ts*", "src/index.tsx", "src/swDev.js"],
 	"exclude": ["node_modules", "dist", "lib", "build"]
 }
