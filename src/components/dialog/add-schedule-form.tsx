@@ -3,7 +3,6 @@ import FormSchedule from './form/form-schedule';
 import FormContainer from './form/container';
 import { Schedule } from '../../types/interfaces/interfaces';
 import { AddScheduleFormProps } from '../../types/components/components';
-import Submit from '../../presenter/submit';
 
 function AddScheduleForm({
 	toggleDialog,

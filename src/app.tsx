@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import AppButton from './components/button/button';
 import Header from './components/header/app';
 import Schedules from './components/Lists';
 import AddScheduleForm from './components/dialog/add-schedule-form';
 import Submit from './presenter/submit';
 import { Schedule } from './types/interfaces/interfaces';
 import React from 'react';
-import { AuthProvider, useAuthContext } from './context/AuthContext';
+import { useAuthContext } from './context/AuthContext';
 
 function App() {
 	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
@@ -42,7 +41,7 @@ function App() {
 				추가
 			</button>
 
-			<div className='fixed top-1/2 -translate-y-1/2'>
+			<div className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
 				{isAddFormOpen && (
 					<AddScheduleForm
 						toggleDialog={toggleDialog}
