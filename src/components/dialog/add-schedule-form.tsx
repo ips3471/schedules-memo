@@ -48,7 +48,7 @@ const _defaultForm: Schedule = {
 	to: '디지털허브치과의원',
 	isAllow: false,
 	mission: '',
-	reward: 26000,
+	reward: 36000,
 	time: '07:40',
 };
 

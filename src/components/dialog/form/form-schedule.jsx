@@ -1,7 +1,7 @@
 import React from 'react';
 
 function FormSchedule({ handleInputChange, form }) {
-	function Input(type, placeholder, name, currDate) {
+	function Input(type, placeholder, name, currDate, isRequre = true) {
 		return (
 			<input
 				type={type}
@@ -16,6 +16,7 @@ function FormSchedule({ handleInputChange, form }) {
 						: ''
 				}
 				autoComplete='off'
+				required={isRequre}
 			></input>
 		);
 	}
@@ -28,7 +29,7 @@ function FormSchedule({ handleInputChange, form }) {
 					{new Input('text', '도착장소', 'to')}
 					{new Input('text', '출발시간', 'time')}
 					{new Input('number', '리워드', 'reward')}
-					{new Input('text', '요청사항', 'mission')}
+					{new Input('text', '요청사항', 'mission', '', false)}
 				</div>
 			</div>
 		</div>
