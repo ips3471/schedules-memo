@@ -10,7 +10,7 @@ import {
 } from 'firebase/database';
 import { Schedule, ScheduleWithId } from '../types/interfaces/interfaces';
 import { v4 as uuid } from 'uuid';
-import { User } from 'firebase/auth';
+import { User } from '../types/models/models';
 
 const db = {
 	database: getDatabase(firebaseApp),
@@ -49,6 +49,22 @@ const db = {
 					return false;
 				}
 			});
+	},
+
+	async getUserToken(uid: string) {
+		return get(ref(this.database, `Users/${uid}`)) //
+			.then(snapshot => {
+				if (snapshot.exists()) {
+					return snapshot.val().token;
+				}
+			});
+	},
+
+	updateUserToken(uid: string, token: string) {
+		update(ref(this.database, `Users/${uid}`), {
+			uid,
+			token,
+		});
 	},
 };
 

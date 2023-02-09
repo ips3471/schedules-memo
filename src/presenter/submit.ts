@@ -5,6 +5,9 @@ import { UpdateList, UpdateLists } from '../types/models/models';
 
 const Submit = {
 	addSchedule(schedule: Schedule, update: UpdateLists<ScheduleWithId>) {
+		if (!schedule.uid) {
+			throw new Error('잘못된 접근: 유저정보가 존재하지 않습니다');
+		}
 		const newList = db.addList(schedule);
 		update(prev => [...prev, newList]);
 	},

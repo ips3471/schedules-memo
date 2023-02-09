@@ -6,22 +6,54 @@ import Submit from './presenter/submit';
 import { Schedule } from './types/interfaces/interfaces';
 import React from 'react';
 import { useAuthContext } from './context/AuthContext';
+import messaging from './services/messaging';
+import { PushMessage } from './types/models/models';
+import { ToastContainer, toast } from 'react-toast';
 
 function App() {
 	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
 	const [schedules, setSchedules] = useState([]);
 	const { user } = useAuthContext();
+	const [message, setMessage] = useState<PushMessage | null>(null);
+
+	useEffect(() => {
+		if (!user) {
+			return;
+		}
+		messaging
+			.requestPermission() //
+			.then(token => {
+				token && messaging.addMessageListener(popUpNotification);
+				user && token && messaging.updateToken(user, token);
+			});
+	}, [user]);
+
+	function popUpNotification(title: string, body: string) {
+		console.log(title, body);
+		setTimeout(() => {
+			setMessage(null);
+		}, 5000);
+		setMessage(prev => ({ title, body }));
+	}
+
+	useEffect(() => {
+		if (message == null) {
+			return;
+		}
+		toast(message.body);
+	}, [message]);
 
 	useEffect(() => {
 		Submit.getLists(setSchedules);
 	}, []);
 
 	const handleAddSchedule = (form: Schedule) => {
-		Submit.addSchedule(form, setSchedules);
+		Submit.addSchedule({ ...form, uid: user?.uid }, setSchedules);
 		toggleDialog();
 	};
 
 	function toggleDialog() {
+		console.log('toggle');
 		if (!user) {
 			alert('로그인 후 이용이 가능합니다');
 			return;
@@ -31,7 +63,10 @@ function App() {
 
 	return (
 		<div className='flex flex-col h-full '>
-			<Header />
+			<div>
+				<Header />
+				<ToastContainer delay={7000} position='top-center' />
+			</div>
 			<Schedules lists={schedules} />
 
 			<button
