@@ -2,7 +2,7 @@
 
 const cacheName = 'cache-v1';
 
-const precacheResources = ['/', '/static/js/bundle.js', '/offline.html'];
+const precacheResources = ['/', '/offline.html'];
 
 self.addEventListener('install', event => {
 	event.waitUntil(
