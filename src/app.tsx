@@ -17,14 +17,15 @@ function App() {
 	const [message, setMessage] = useState<PushMessage | null>(null);
 
 	useEffect(() => {
+		messaging.addMessageListener(popUpNotification);
 		if (!user) {
 			return;
 		}
+		console.log('onUser effect');
 		messaging
 			.requestPermission() //
 			.then(token => {
-				token && messaging.addMessageListener(popUpNotification);
-				user && token && messaging.updateToken(user, token);
+				token && messaging.updateToken(user, token);
 			});
 	}, []);
 
@@ -66,7 +67,7 @@ function App() {
 		<div className='flex flex-col h-full '>
 			<div>
 				<Header />
-				<ToastContainer delay={7000} position='top-center' />
+				<ToastContainer delay={5000} position='top-center' />
 			</div>
 			<Schedules lists={schedules} />
 

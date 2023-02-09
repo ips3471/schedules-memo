@@ -5,10 +5,9 @@ import messaging from '../../services/messaging';
 function Header() {
 	const { login, logout, user } = useAuthContext();
 
-	const handleLogin = () => {
+	const handleLogin = async () => {
 		if (user) {
 			logout();
-			messaging.removeToken();
 		} else {
 			login();
 		}
