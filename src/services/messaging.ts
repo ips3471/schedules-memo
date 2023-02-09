@@ -37,40 +37,69 @@ const messaging = {
 		db.updateUserToken(user.uid, token);
 	},
 
-	async sendMessage(type: SendNotificationType, uid: string) {
-		if (!uid) {
-			console.error('user token is not exist');
-			return;
-		}
-		const foundToken = await db.getUserToken(uid);
+	async sendMessage(type: SendNotificationType, uid?: string) {
 		switch (type) {
-			case 'changed': {
-				const myHeaders = new Headers();
-				myHeaders.append('Content-Type', 'application/json');
-				myHeaders.append(
-					'Authorization',
-					`Bearer ${process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY}`,
-				);
+			case 'changed':
+				{
+					const foundToken = await db.getUserToken(uid);
+					const myHeaders = new Headers();
+					myHeaders.append('Content-Type', 'application/json');
+					myHeaders.append(
+						'Authorization',
+						`Bearer ${process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY}`,
+					);
 
-				const raw = JSON.stringify({
-					to: foundToken,
-					notification: {
-						title: '승인',
-						body: '변경된 스케줄이 있습니다',
-					},
-				});
+					const raw = JSON.stringify({
+						to: foundToken,
+						notification: {
+							title: '승인',
+							body: '변경된 스케줄이 있습니다',
+						},
+					});
 
-				const requestOptions = {
-					method: 'POST',
-					headers: myHeaders,
-					body: raw,
-				};
+					const requestOptions = {
+						method: 'POST',
+						headers: myHeaders,
+						body: raw,
+					};
 
-				fetch('https://fcm.googleapis.com/fcm/send', requestOptions)
-					.then(response => response.text())
-					.then(result => console.log(result))
-					.catch(error => console.log('error', error));
-			}
+					fetch('https://fcm.googleapis.com/fcm/send', requestOptions)
+						.then(response => response.text())
+						.then(result => console.log(result))
+						.catch(error => console.log('error', error));
+				}
+				break;
+			case 'submitted':
+				{
+					const admin = await db.getAdmin();
+					const foundToken = await db.getUserToken(admin);
+					const myHeaders = new Headers();
+					myHeaders.append('Content-Type', 'application/json');
+					myHeaders.append(
+						'Authorization',
+						`Bearer ${process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY}`,
+					);
+
+					const raw = JSON.stringify({
+						to: foundToken,
+						notification: {
+							title: '승인',
+							body: '새로운 스케줄이 등록되었습니다',
+						},
+					});
+
+					const requestOptions = {
+						method: 'POST',
+						headers: myHeaders,
+						body: raw,
+					};
+
+					fetch('https://fcm.googleapis.com/fcm/send', requestOptions)
+						.then(response => response.text())
+						.then(result => console.log(result))
+						.catch(error => console.log('error', error));
+				}
+				break;
 		}
 	},
 };

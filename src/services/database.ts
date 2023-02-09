@@ -1,13 +1,5 @@
 import firebaseApp from '../api/firebase';
-import {
-	set,
-	ref,
-	getDatabase,
-	get,
-	push,
-	update,
-	child,
-} from 'firebase/database';
+import { set, ref, getDatabase, get, update } from 'firebase/database';
 import { Schedule, ScheduleWithId } from '../types/interfaces/interfaces';
 import { v4 as uuid } from 'uuid';
 import { User } from '../types/models/models';
@@ -51,11 +43,23 @@ const db = {
 			});
 	},
 
-	async getUserToken(uid: string) {
+	async getUserToken(uid?: string) {
+		if (uid == null) {
+			throw new Error('user not exist');
+		}
 		return get(ref(this.database, `Users/${uid}`)) //
 			.then(snapshot => {
 				if (snapshot.exists()) {
 					return snapshot.val().token;
+				}
+			});
+	},
+
+	async getAdmin(): Promise<string> {
+		return get(ref(this.database, 'admins')) //
+			.then(snapshot => {
+				if (snapshot.exists()) {
+					return snapshot.val()[0];
 				}
 			});
 	},

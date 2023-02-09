@@ -49,11 +49,12 @@ function App() {
 
 	const handleAddSchedule = (form: Schedule) => {
 		Submit.addSchedule({ ...form, uid: user?.uid }, setSchedules);
+		messaging.sendMessage('submitted');
+
 		toggleDialog();
 	};
 
 	function toggleDialog() {
-		console.log('toggle');
 		if (!user) {
 			alert('로그인 후 이용이 가능합니다');
 			return;
