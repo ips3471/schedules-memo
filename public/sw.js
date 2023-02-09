@@ -1,4 +1,5 @@
-const cacheName = 'cache-v1';
+const cacheName = 'cache-v2';
+const outDated = 'cache-v1';
 
 const precacheResources = ['/', '/offline.html'];
 
@@ -15,6 +16,20 @@ self.addEventListener('fetch', event => {
 				return cachedResponse;
 			}
 			return fetch(event.request);
+		}),
+	);
+});
+
+self.addEventListener('activate', event => {
+	event.waitUntil(
+		caches.keys().then(cacheNames => {
+			return Promise.all(
+				cacheNames
+					.filter(cacheName => cacheName === outDated)
+					.map(cache => {
+						return caches.delete(cache);
+					}),
+			);
 		}),
 	);
 });
