@@ -6,6 +6,7 @@ export interface Schedule {
 	mission: string;
 	date: string;
 	time: string;
+	uid?: string;
 }
 
 export interface ScheduleWithId extends Schedule {

@@ -4,23 +4,27 @@ import { ListProps } from '../types/components/components';
 import React, { useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import Submit from '../presenter/submit';
+import messaging from '../services/messaging';
 
 function List({ list }: ListProps) {
 	const { user } = useAuthContext();
-	const { date, from, id, isAllow, mission, reward, to, time } = list;
+	const { date, from, id, isAllow, mission, reward, to, time, uid } = list;
 
 	const [state, setState] = useState(isAllow);
 
-	const handleListClick = () => {
+	const handleListClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		if (!user?.isAdmin) {
-			alert('접근권한이 없습니다');
+			alert('권한이 없습니다');
 			return;
 		}
 		Submit.updateState({ ...list, isAllow: state }, setState);
+		if (uid) {
+			messaging.sendMessage('changed', uid);
+		}
 	};
 
 	return (
-		<div className='flex flex-col px-2'>
+		<li className='flex flex-col px-2'>
 			<div className={'flex items-center justify-between px-1 my-1 '}>
 				<DateItem date={date} />
 				<PlaceItem from={from} to={to} />
@@ -43,7 +47,7 @@ function List({ list }: ListProps) {
 				)}
 				{time} 출발 예정
 			</div>
-		</div>
+		</li>
 	);
 }
 

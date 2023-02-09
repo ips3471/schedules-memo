@@ -1,6 +1,8 @@
+// import { offlineFallback } from 'workbox-recipes';
+
 const cacheName = 'cache-v1';
 
-const precacheResources = ['/', '/static/js/bundle.js'];
+const precacheResources = ['/', '/static/js/bundle.js', '/offline.html'];
 
 self.addEventListener('install', event => {
 	event.waitUntil(
@@ -18,3 +20,7 @@ self.addEventListener('fetch', event => {
 		}),
 	);
 });
+
+/* offlineFallback({
+	pageFallback: '/offline.html',
+}); */
