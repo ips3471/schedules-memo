@@ -8,6 +8,7 @@ import {
 	deleteToken,
 } from 'firebase/messaging';
 import db from './database';
+import { AuthUser } from '../context/AuthContext';
 
 const messagingRef = getMessaging(firebaseApp);
 
@@ -16,7 +17,6 @@ const messaging = {
 	serverKey: process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY,
 
 	async requestPermission() {
-		await this.removeToken();
 		const permission = await Notification.requestPermission();
 		if (permission === 'granted') {
 			if (!isSupported()) {
@@ -25,14 +25,19 @@ const messaging = {
 			}
 			console.log('get token');
 
-			const token = await getToken(messagingRef, {
-				vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_VAPID_KEY,
-			});
+			const token = this.genToken();
 			return token;
 		} else {
 			alert('알람을 거부할 경우 새로운 스케줄 이벤트를 수신할 수 없습니다');
 			return;
 		}
+	},
+
+	async genToken() {
+		const token = await getToken(messagingRef, {
+			vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_VAPID_KEY,
+		});
+		return token;
 	},
 
 	async addMessageListener(callback: (title: string, body: string) => void) {
@@ -47,12 +52,13 @@ const messaging = {
 	},
 
 	updateToken(user: User, token: string) {
-		db.updateUserToken(user.uid, token);
+		token && db.updateUserToken(user.uid, token);
 	},
 
-	async removeToken() {
+	async removeToken(user: AuthUser) {
 		console.info('token removed');
 		await deleteToken(messagingRef);
+		db.removeUserToken(user);
 	},
 
 	async sendMessage(type: SendNotificationType, uid?: string) {

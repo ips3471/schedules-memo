@@ -1,5 +1,5 @@
 import firebaseApp from '../api/firebase';
-import { set, ref, getDatabase, get, update } from 'firebase/database';
+import { set, ref, getDatabase, get, update, remove } from 'firebase/database';
 import { Schedule, ScheduleWithId } from '../types/interfaces/interfaces';
 import { v4 as uuid } from 'uuid';
 import { User } from '../types/models/models';
@@ -43,6 +43,10 @@ const db = {
 			});
 	},
 
+	async removeUserToken(user: User) {
+		remove(ref(this.database, `Users/${user.uid}/token`));
+	},
+
 	async getUserToken(uid?: string) {
 		if (uid == null) {
 			throw new Error('user not exist');
@@ -65,7 +69,7 @@ const db = {
 	},
 
 	updateUserToken(uid: string, token: string) {
-		update(ref(this.database, `Users/${uid}`), {
+		set(ref(this.database, `Users/${uid}`), {
 			uid,
 			token,
 		});

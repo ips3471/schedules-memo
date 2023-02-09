@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import auth from '../services/auth';
 import db from '../services/database';
+import messaging from '../services/messaging';
 import { User } from '../types/models/models';
 
 interface AuthContextValue {
@@ -16,7 +17,7 @@ interface AuthContextValue {
 	updateToken(token: string): void;
 }
 
-type AuthUser = User & { isAdmin: Promise<boolean> };
+export type AuthUser = User & { isAdmin: Promise<boolean> };
 
 interface AuthContextProviderProps {
 	children: ReactNode;
@@ -36,7 +37,8 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
 		auth.onUserStateChanged(async user => {
 			if (!user) return;
 			const isAdmin = await db.isAdmin(user);
-			const token = await db.getUserToken(user.uid);
+			const token = await messaging.genToken();
+			messaging.updateToken(user, token);
 			setUser({ ...user, isAdmin, token });
 		});
 	}, []);
@@ -46,9 +48,8 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
 	}
 
 	function logout() {
-		auth.logout();
+		user && auth.logout(user);
 		setUser(null);
-		// home으로 이동
 	}
 
 	function updateToken(token: string) {

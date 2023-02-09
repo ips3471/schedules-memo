@@ -8,6 +8,8 @@ import {
 	NextOrObserver,
 } from 'firebase/auth';
 import firebaseApp from '../api/firebase';
+import { AuthUser } from '../context/AuthContext';
+import messaging from './messaging';
 
 type Provider = 'google';
 
@@ -21,8 +23,9 @@ const auth = {
 		signInWithPopup(authRef, providers[provider]).catch(console.error);
 	},
 
-	logout() {
+	logout(user: AuthUser) {
 		signOut(authRef).catch(console.error);
+		messaging.removeToken(user);
 	},
 
 	onUserStateChanged(onAuthChanged: NextOrObserver<User>) {
