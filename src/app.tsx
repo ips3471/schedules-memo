@@ -26,7 +26,7 @@ function App() {
 				token && messaging.addMessageListener(popUpNotification);
 				user && token && messaging.updateToken(user, token);
 			});
-	}, [user]);
+	}, []);
 
 	function popUpNotification(title: string, body: string) {
 		console.log(title, body);
