@@ -1,6 +1,12 @@
 import { SendNotificationType, User } from './../types/models/models';
 import firebaseApp from '../api/firebase';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import {
+	getMessaging,
+	getToken,
+	onMessage,
+	isSupported,
+	deleteToken,
+} from 'firebase/messaging';
 import db from './database';
 
 const messagingRef = getMessaging(firebaseApp);
@@ -10,8 +16,15 @@ const messaging = {
 	serverKey: process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY,
 
 	async requestPermission() {
+		await this.removeToken();
 		const permission = await Notification.requestPermission();
 		if (permission === 'granted') {
+			if (!isSupported()) {
+				console.info('Not supported');
+				return null;
+			}
+			console.log('get token');
+
 			const token = await getToken(messagingRef, {
 				vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_VAPID_KEY,
 			});
@@ -35,6 +48,11 @@ const messaging = {
 
 	updateToken(user: User, token: string) {
 		db.updateUserToken(user.uid, token);
+	},
+
+	async removeToken() {
+		console.info('token removed');
+		await deleteToken(messagingRef);
 	},
 
 	async sendMessage(type: SendNotificationType, uid?: string) {
@@ -63,7 +81,7 @@ const messaging = {
 						body: raw,
 					};
 
-					fetch('https://fcm.googleapis.com/fcm/send', requestOptions)
+					fetch(this.baseURL, requestOptions)
 						.then(response => response.text())
 						.then(result => console.log(result))
 						.catch(error => console.log('error', error));
@@ -73,6 +91,7 @@ const messaging = {
 				{
 					const admin = await db.getAdmin();
 					const foundToken = await db.getUserToken(admin);
+					console.log(foundToken);
 					const myHeaders = new Headers();
 					myHeaders.append('Content-Type', 'application/json');
 					myHeaders.append(
@@ -94,7 +113,7 @@ const messaging = {
 						body: raw,
 					};
 
-					fetch('https://fcm.googleapis.com/fcm/send', requestOptions)
+					fetch(this.baseURL, requestOptions)
 						.then(response => response.text())
 						.then(result => console.log(result))
 						.catch(error => console.log('error', error));

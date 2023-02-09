@@ -1,11 +1,17 @@
 import React from 'react';
 import { useAuthContext } from '../../context/AuthContext';
+import messaging from '../../services/messaging';
 
 function Header() {
 	const { login, logout, user } = useAuthContext();
 
 	const handleLogin = () => {
-		user ? logout() : login();
+		if (user) {
+			logout();
+			messaging.removeToken();
+		} else {
+			login();
+		}
 	};
 
 	return (
