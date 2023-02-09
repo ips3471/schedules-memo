@@ -1,5 +1,3 @@
-// import { offlineFallback } from 'workbox-recipes';
-
 const cacheName = 'cache-v1';
 
 const precacheResources = ['/', '/offline.html'];
@@ -20,7 +18,3 @@ self.addEventListener('fetch', event => {
 		}),
 	);
 });
-
-/* offlineFallback({
-	pageFallback: '/offline.html',
-}); */
