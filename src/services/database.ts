@@ -1,26 +1,26 @@
 import firebaseApp from '../api/firebase';
 import { set, ref, getDatabase, get, update, remove } from 'firebase/database';
-import { Schedule, ScheduleWithId } from '../types/interfaces/interfaces';
+import { Schedule } from '../types/interfaces/interfaces';
 import { v4 as uuid } from 'uuid';
 import { User } from '../types/models/models';
 
 const db = {
 	database: getDatabase(firebaseApp),
 
-	addList(list: Schedule) {
+	addList(list: Schedule, uid: string) {
 		const id = uuid();
 		const element = { ...list, id };
-		set(ref(this.database, `schedules/${id}`), element);
+		set(ref(this.database, `schedules/${uid}/${id}`), element);
 		return element;
 	},
 
-	updateList(updated: ScheduleWithId) {
-		update(ref(this.database, `schedules/${updated.id}`), updated);
+	updateList(updated: Schedule, uid: string) {
+		update(ref(this.database, `schedules/${uid}/${updated.id}`), updated);
 	},
 
-	async getLists(): Promise<ScheduleWithId[]> {
+	async getLists(uid: string): Promise<Schedule[]> {
 		try {
-			const snapshot = await get(ref(this.database, 'schedules'));
+			const snapshot = await get(ref(this.database, `schedules/${uid}`));
 			if (snapshot.exists()) {
 				return Object.values(snapshot.val());
 			} else {

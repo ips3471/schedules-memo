@@ -50,6 +50,7 @@ const _defaultForm: Schedule = {
 	mission: '',
 	reward: 36000,
 	time: '07:40',
+	id: undefined,
 };
 
 function getFullDateFormat(monthOrDate: number): string {

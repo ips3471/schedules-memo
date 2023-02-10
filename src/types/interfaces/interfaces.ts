@@ -1,14 +1,10 @@
 export interface Schedule {
-	from: string;
-	to: string;
-	isAllow: boolean;
-	reward: number;
-	mission: string;
 	date: string;
+	from: string;
+	id?: string;
+	isAllow: boolean;
+	mission: string;
+	reward: number;
 	time: string;
-	uid?: string;
-}
-
-export interface ScheduleWithId extends Schedule {
-	id: string;
+	to: string;
 }

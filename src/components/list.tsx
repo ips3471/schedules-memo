@@ -8,7 +8,7 @@ import messaging from '../services/messaging';
 
 function List({ list }: ListProps) {
 	const { user } = useAuthContext();
-	const { date, from, id, isAllow, mission, reward, to, time, uid } = list;
+	const { date, from, id, isAllow, mission, reward, to, time } = list;
 
 	const [state, setState] = useState(isAllow);
 
@@ -17,9 +17,9 @@ function List({ list }: ListProps) {
 			alert('권한이 없습니다');
 			return;
 		}
-		Submit.updateState({ ...list, isAllow: state }, setState);
-		if (uid) {
-			messaging.sendMessage('changed', uid);
+		Submit.updateState({ ...list, isAllow: state }, user.uid, setState);
+		if (user.uid) {
+			messaging.sendMessage('changed', user.uid);
 		}
 	};
 
