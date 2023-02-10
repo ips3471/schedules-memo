@@ -43,9 +43,9 @@ function List({ list }: ListProps) {
 			<div className='border-y-2 py-1 border-zinc-800 px-appBody flex justify-between items-center h-9 text-sm'>
 				{mission && <div>{mission}</div>}
 				{!mission && (
-					<div className='opacity-40'>입력된 요청사항이 없습니다.</div>
+					<span className='opacity-40'>입력된 요청사항이 없습니다.</span>
 				)}
-				{time} 출발 예정
+				<span>{time} 출발 예정</span>
 			</div>
 		</li>
 	);

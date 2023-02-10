@@ -20,6 +20,16 @@ body {
 	@apply w-full h-full max-w-screen-sm;
 }
 
+button {
+	-webkit-tap-highlight-color: transparent;
+}
+
+h1,
+button,
+span {
+	user-select: none;
+}
+
 input,
 select {
 	@apply w-full text-gray-900 h-10 p-2;
