@@ -9,8 +9,13 @@ const Submit = {
 	},
 
 	async getLists(uid: string, update: UpdateLists<Schedule>) {
-		const lists = await db.getLists(uid);
-		update(lists);
+		if (uid === process.env.REACT_APP_FIREBASE_ADMIN) {
+			console.log('Admin: Get All Schedules');
+			db.getAllLists(uid).then(update);
+		} else {
+			console.log('User: Get User Schedules');
+			db.getLists(uid).then(update);
+		}
 	},
 
 	updateState(list: Schedule, uid: string, update: UpdateList<boolean>) {
