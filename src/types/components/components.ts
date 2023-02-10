@@ -1,4 +1,4 @@
-import { Schedule, ScheduleWithId } from '../interfaces/interfaces';
+import { Schedule } from '../interfaces/interfaces';
 
 export type AddScheduleFormProps = {
 	toggleDialog(): void;
@@ -6,10 +6,9 @@ export type AddScheduleFormProps = {
 };
 
 export type ListsProps = {
-	lists: ScheduleWithId[];
+	lists: Schedule[];
 };
 
 export type ListProps = {
-	list: ScheduleWithId;
+	list: Schedule;
 };
-

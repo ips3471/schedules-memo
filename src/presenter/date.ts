@@ -14,9 +14,6 @@ class DatePresenter {
 		if (this.diffDay >= 0 && this.diffDay <= 3) {
 			return 'D - ' + Math.abs(this.diffDay);
 		}
-		if (this.diffDay > -3 && this.diffDay < 0) {
-			return 'D + ' + Math.abs(this.diffDay);
-		}
 
 		return this.getMonth() + ' ' + this.getDay();
 	}

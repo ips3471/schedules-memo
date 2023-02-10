@@ -45,11 +45,14 @@ function App() {
 	}, [message]);
 
 	useEffect(() => {
-		Submit.getLists(setSchedules);
-	}, []);
+		user && Submit.getLists(user.uid, setSchedules);
+	}, [user]);
 
 	const handleAddSchedule = (form: Schedule) => {
-		Submit.addSchedule({ ...form, uid: user?.uid }, setSchedules);
+		if (!user) {
+			throw new Error('잘못된 접근: User Authentication Error');
+		}
+		Submit.addSchedule(form, user.uid, setSchedules);
 		messaging.sendMessage('submitted');
 
 		toggleDialog();

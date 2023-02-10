@@ -1,13 +1,13 @@
 import React from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { ListsProps } from '../types/components/components';
-import { ScheduleWithId } from '../types/interfaces/interfaces';
+import { Schedule } from '../types/interfaces/interfaces';
 import List from './list';
 
 function Schedules({ lists }: ListsProps) {
 	const { user } = useAuthContext();
 
-	const sortSchedulesByDate = (a: ScheduleWithId, b: ScheduleWithId) => {
+	const sortSchedulesByDate = (a: Schedule, b: Schedule) => {
 		return convertDateToCompareWith(a.date) - convertDateToCompareWith(b.date);
 
 		function convertDateToCompareWith(dateFormat: string) {
