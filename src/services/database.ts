@@ -6,6 +6,7 @@ import { User } from '../types/models/models';
 
 const db = {
 	database: getDatabase(firebaseApp),
+	admin: process.env.REACT_APP_FIREBASE_ADMIN,
 
 	addList(list: Schedule, uid: string) {
 		const id = uuid();
@@ -19,8 +20,9 @@ const db = {
 	},
 
 	async getLists(uid: string): Promise<Schedule[]> {
+		const lists = uid === this.admin ? 'schedules' : `schedules/${uid}`;
 		try {
-			const snapshot = await get(ref(this.database, `schedules/${uid}`));
+			const snapshot = await get(ref(this.database, lists));
 			if (snapshot.exists()) {
 				return Object.values(snapshot.val());
 			} else {
