@@ -20,11 +20,32 @@ const db = {
 	},
 
 	async getLists(uid: string): Promise<Schedule[]> {
-		const lists = uid === this.admin ? 'schedules' : `schedules/${uid}`;
 		try {
-			const snapshot = await get(ref(this.database, lists));
+			const snapshot = await get(ref(this.database, `schedules/${uid}`));
 			if (snapshot.exists()) {
 				return Object.values(snapshot.val());
+			} else {
+				return [];
+			}
+		} catch (err) {
+			console.error(err);
+			return [];
+		}
+	},
+
+	async getAllLists(uid: string): Promise<Schedule[]> {
+		if (uid !== this.admin) {
+			throw new Error('Only Accepted to Admin');
+		}
+		try {
+			const snapshot = await get(ref(this.database, 'schedules'));
+			if (snapshot.exists()) {
+				const ids = Object.values(snapshot.val());
+				const childrenReducer = function (prev: Object, current: Object) {
+					return Object.values(current).concat(prev);
+				};
+				const lists = ids.reduce(childrenReducer, []) as Schedule[];
+				return lists;
 			} else {
 				return [];
 			}
