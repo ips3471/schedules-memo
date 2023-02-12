@@ -51,6 +51,7 @@ const _defaultForm: Schedule = {
 	reward: 36000,
 	time: '07:40',
 	id: undefined,
+	uid: '',
 };
 
 function getFullDateFormat(monthOrDate: number): string {

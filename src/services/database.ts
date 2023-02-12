@@ -10,7 +10,7 @@ const db = {
 
 	addList(list: Schedule, uid: string) {
 		const id = uuid();
-		const element = { ...list, id };
+		const element = { ...list, id, uid };
 		set(ref(this.database, `schedules/${uid}/${id}`), element);
 		return element;
 	},

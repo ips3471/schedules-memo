@@ -1,5 +1,4 @@
 const cacheName = 'cache-v2';
-const outDated = 'cache-v1';
 
 const precacheResources = ['/', '/offline.html'];
 
@@ -22,13 +21,14 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('activate', event => {
 	event.waitUntil(
-		caches.keys().then(cacheNames => {
+		caches.keys().then(keyList => {
 			return Promise.all(
-				cacheNames
-					.filter(cacheName => cacheName === outDated)
-					.map(cache => {
-						return caches.delete(cache);
-					}),
+				keyList.map(key => {
+					if (key !== cacheName) {
+						console.log('[ServiceWorker] Removing old cache');
+						return caches.delete(key);
+					}
+				}),
 			);
 		}),
 	);
