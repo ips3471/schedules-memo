@@ -37,6 +37,7 @@ const messaging = {
 		const token = await getToken(messagingRef, {
 			vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_VAPID_KEY,
 		});
+		console.log('generated token', token);
 		return token;
 	},
 

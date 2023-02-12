@@ -95,9 +95,9 @@ const db = {
 			});
 	},
 
-	updateUserToken(uid: string, token: string) {
-		set(ref(this.database, `Users/${uid}`), {
-			uid,
+	async updateUserToken(uid: string, token: string) {
+		console.log('update token', uid, token);
+		update(ref(this.database, `Users/${uid}`), {
 			token,
 		});
 	},
