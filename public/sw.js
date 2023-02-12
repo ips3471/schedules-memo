@@ -1,6 +1,6 @@
 const cacheName = 'cache-v3';
 
-const precacheResources = ['/', '/offline.html'];
+const precacheResources = ['/offline.html'];
 
 self.addEventListener('install', event => {
 	event.waitUntil(
