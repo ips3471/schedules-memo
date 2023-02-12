@@ -53,9 +53,20 @@ function App() {
 			throw new Error('잘못된 접근: User Authentication Error');
 		}
 		Submit.addSchedule(form, user.uid, setSchedules);
-		messaging.sendMessage('submitted');
+		messaging.sendMessage(
+			'submitted',
+			process.env.REACT_APP_FIREBASE_ADMIN! as string,
+		);
 
 		toggleDialog();
+	};
+
+	const handleDeleteSchedule = (schedule: Schedule) => {
+		Submit.removeSchedule(schedule, setSchedules);
+		messaging.sendMessage(
+			'submitted',
+			process.env.REACT_APP_FIREBASE_ADMIN! as string,
+		);
 	};
 
 	function toggleDialog() {
@@ -72,7 +83,7 @@ function App() {
 				<Header />
 				<ToastContainer delay={5000} position='top-center' />
 			</div>
-			<Schedules lists={schedules} />
+			<Schedules onDelete={handleDeleteSchedule} lists={schedules} />
 
 			<button
 				className='w-16 h-16 fixed bottom-5 right-5 rounded-full py-6 bg-orange-700'

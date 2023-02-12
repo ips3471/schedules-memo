@@ -8,6 +8,14 @@ const Submit = {
 		update(prev => [...prev, newList]);
 	},
 
+	removeSchedule(schedule: Schedule, update: UpdateLists<Schedule>) {
+		if (!schedule.id) {
+			throw new Error('unknown ID is received');
+		}
+		db.removeList(schedule.uid, schedule.id);
+		update(prev => prev.filter(s => s.id !== schedule.id));
+	},
+
 	async getLists(uid: string, update: UpdateLists<Schedule>) {
 		if (uid === process.env.REACT_APP_FIREBASE_ADMIN) {
 			console.log('Admin: Get All Schedules');

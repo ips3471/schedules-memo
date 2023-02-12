@@ -4,7 +4,7 @@ import { ListsProps } from '../types/components/components';
 import { Schedule } from '../types/interfaces/interfaces';
 import List from './list';
 
-function Schedules({ lists }: ListsProps) {
+function Schedules({ lists, onDelete }: ListsProps) {
 	const { user } = useAuthContext();
 
 	const sortSchedulesByDate = (a: Schedule, b: Schedule) => {
@@ -25,7 +25,9 @@ function Schedules({ lists }: ListsProps) {
 				{lists &&
 					user &&
 					lists.sort(sortSchedulesByDate).map(schedule => {
-						return <List key={schedule.id} list={schedule} />;
+						return (
+							<List key={schedule.id} list={schedule} onDelete={onDelete} />
+						);
 					})}
 				{!user && (
 					<div className='p-5 '> 로그인 후에 리스트 확인이 가능합니다.</div>
