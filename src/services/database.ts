@@ -15,6 +15,10 @@ const db = {
 		return element;
 	},
 
+	removeList(uid: string, id: string) {
+		remove(ref(this.database, `schedules/${uid}/${id}`));
+	},
+
 	updateList(updated: Schedule, uid: string) {
 		update(ref(this.database, `schedules/${uid}/${updated.id}`), updated);
 	},

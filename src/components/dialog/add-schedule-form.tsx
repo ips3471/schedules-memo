@@ -25,7 +25,7 @@ function AddScheduleForm({
 	return (
 		<div className=''>
 			<FormContainer
-				formTitle='모임 추가'
+				formTitle='스케줄 추가'
 				onCancelCallback={toggleDialog}
 				onSubmitCallback={() => handleAddSchedule()}
 			>

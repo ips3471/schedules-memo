@@ -42,6 +42,7 @@ const messaging = {
 
 	async addMessageListener(callback: (title: string, body: string) => void) {
 		onMessage(messagingRef, payload => {
+			console.log('onMessage', payload);
 			if (!payload) {
 				console.error('payload not exist');
 				return;
@@ -61,70 +62,41 @@ const messaging = {
 		db.removeUserToken(user);
 	},
 
-	async sendMessage(type: SendNotificationType, uid?: string) {
+	async sendMessage(type: SendNotificationType, uid: string) {
+		const foundToken = await db.getUserToken(uid);
+		console.log(foundToken);
+
+		const myHeaders = new Headers();
+		myHeaders.append('Content-Type', 'application/json');
+		myHeaders.append(
+			'Authorization',
+			`Bearer ${process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY}`,
+		);
+
+		function genBodyAndFetch(body: string) {
+			const raw = JSON.stringify({
+				to: foundToken,
+				notification: {
+					title: 'Schedules-Memo',
+					body,
+				},
+			});
+			const requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: raw,
+			};
+			fetch(messaging.baseURL, requestOptions)
+				.then(response => response.text())
+				.then(result => console.log(result))
+				.catch(error => console.log('error', error));
+		}
+
 		switch (type) {
 			case 'changed':
-				{
-					const foundToken = await db.getUserToken(uid);
-					const myHeaders = new Headers();
-					myHeaders.append('Content-Type', 'application/json');
-					myHeaders.append(
-						'Authorization',
-						`Bearer ${process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY}`,
-					);
-
-					const raw = JSON.stringify({
-						to: foundToken,
-						notification: {
-							title: '승인',
-							body: '변경된 스케줄이 있습니다',
-						},
-					});
-
-					const requestOptions = {
-						method: 'POST',
-						headers: myHeaders,
-						body: raw,
-					};
-
-					fetch(this.baseURL, requestOptions)
-						.then(response => response.text())
-						.then(result => console.log(result))
-						.catch(error => console.log('error', error));
-				}
-				break;
+				return genBodyAndFetch('변경된 내용이 있습니다');
 			case 'submitted':
-				{
-					const admin = await db.getAdmin();
-					const foundToken = await db.getUserToken(admin);
-					console.log(foundToken);
-					const myHeaders = new Headers();
-					myHeaders.append('Content-Type', 'application/json');
-					myHeaders.append(
-						'Authorization',
-						`Bearer ${process.env.REACT_APP_FIREBASE_MESSAGING_SERVER_KEY}`,
-					);
-
-					const raw = JSON.stringify({
-						to: foundToken,
-						notification: {
-							title: '승인',
-							body: '새로운 스케줄이 등록되었습니다',
-						},
-					});
-
-					const requestOptions = {
-						method: 'POST',
-						headers: myHeaders,
-						body: raw,
-					};
-
-					fetch(this.baseURL, requestOptions)
-						.then(response => response.text())
-						.then(result => console.log(result))
-						.catch(error => console.log('error', error));
-				}
-				break;
+				return genBodyAndFetch('새로운 스케줄이 있습니다');
 		}
 	},
 };
