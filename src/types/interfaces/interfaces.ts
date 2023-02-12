@@ -7,4 +7,5 @@ export interface Schedule {
 	reward: number;
 	time: string;
 	to: string;
+	uid: string;
 }
