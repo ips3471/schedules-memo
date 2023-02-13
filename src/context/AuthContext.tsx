@@ -1,3 +1,4 @@
+import { User } from 'firebase/auth';
 import React, {
 	createContext,
 	ReactNode,
@@ -8,7 +9,6 @@ import React, {
 import auth from '../services/auth';
 import db from '../services/database';
 import messaging from '../services/messaging';
-import { User } from '../types/models/models';
 
 interface AuthContextValue {
 	user: AuthUser | null;
@@ -17,7 +17,7 @@ interface AuthContextValue {
 	updateToken(token: string): void;
 }
 
-export type AuthUser = User & { isAdmin: Promise<boolean> };
+export type AuthUser = User & { isAdmin: Promise<boolean>; token: string };
 
 interface AuthContextProviderProps {
 	children: ReactNode;

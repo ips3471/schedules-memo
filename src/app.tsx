@@ -64,7 +64,7 @@ function App() {
 	const handleDeleteSchedule = (schedule: Schedule) => {
 		Submit.removeSchedule(schedule, setSchedules);
 		messaging.sendMessage(
-			'submitted',
+			'changed',
 			process.env.REACT_APP_FIREBASE_ADMIN! as string,
 		);
 	};
