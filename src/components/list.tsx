@@ -89,6 +89,7 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 				{state === 'confirmed' && <span>{time} 출발 예정</span>}
 				{state === 'canceled' && <span>취소 에정</span>}
 				{state === 'finished' && <span>운행 완료</span>}
+				{state === 'paid' && <span>정산 완료</span>}
 			</div>
 		</li>
 	);
