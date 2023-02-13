@@ -5,9 +5,7 @@ class DatePresenter {
 	constructor(date: string) {
 		this.date = new Date(date);
 		this._dateArr = ['일', '월', '화', '수', '목', '금', '토'];
-		this.diffDay = Math.ceil(
-			(Number(this.date) - Number(new Date())) / 1000 / 60 / 60 / 24,
-		);
+		this.diffDay = new Date(date).getDate() - new Date().getDate();
 	}
 
 	getDate() {
