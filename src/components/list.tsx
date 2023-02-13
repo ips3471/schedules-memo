@@ -52,7 +52,8 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 	return (
 		<li
 			className={`${
-				state === 'finished' && 'opacity-40 pointer-events-none'
+				state === 'finished' ||
+				(state === 'paid' && 'opacity-40 pointer-events-none')
 			} flex flex-col px-2`}
 		>
 			<div className={'flex items-center justify-between px-1 my-1 '}>
