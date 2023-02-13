@@ -1,13 +1,10 @@
 import DateItem from './body/list/date';
 import PlaceItem from './body/list/place';
 import { ListProps } from '../types/components/components';
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuthContext } from '../context/AuthContext';
-import Submit from '../presenter/submit';
-import messaging from '../services/messaging';
-import FormContainer from './dialog/form/container';
 
-function List({ list, onDelete, onUpdate }: ListProps) {
+function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 	const { user } = useAuthContext();
 	const { date, from, id, isAllow, mission, reward, to, time, uid } = list;
 
@@ -30,7 +27,12 @@ function List({ list, onDelete, onUpdate }: ListProps) {
 		<>
 			<li className='flex flex-col px-2'>
 				<div className={'flex items-center justify-between px-1 my-1 '}>
-					<DateItem date={date} />
+					<DateItem
+						list={list}
+						onSelect={onSelect}
+						date={date}
+						selected={selected}
+					/>
 					<button
 						onClick={handleList}
 						className='flex flex-1 items-center justify-between text-left'

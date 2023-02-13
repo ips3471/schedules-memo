@@ -9,12 +9,16 @@ export type ListsProps = {
 	lists: Schedule[];
 	onDelete: (schedule: Schedule) => void;
 	onUpdate: (schedule: Schedule) => void;
+	onSelect: (schedule: Schedule) => void;
+	selected?: Schedule;
 };
 
 export type ListProps = {
 	list: Schedule;
 	onDelete: (schedule: Schedule) => void;
 	onUpdate: (schedule: Schedule) => void;
+	onSelect: (schedule: Schedule) => void;
+	selected?: Schedule;
 };
 
 export type HeaderProps = {

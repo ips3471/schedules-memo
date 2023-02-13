@@ -4,10 +4,14 @@ import { ListsProps } from '../types/components/components';
 import { Schedule } from '../types/interfaces/interfaces';
 import List from './list';
 
-function Schedules({ lists, onDelete, onUpdate }: ListsProps) {
+function Schedules({
+	lists,
+	onDelete,
+	onUpdate,
+	onSelect,
+	selected,
+}: ListsProps) {
 	const { user } = useAuthContext();
-
-	console.log('new lists rendered', lists);
 
 	const sortSchedulesByDate = (a: Schedule, b: Schedule) => {
 		return convertDateToCompareWith(a.date) - convertDateToCompareWith(b.date);
@@ -29,6 +33,8 @@ function Schedules({ lists, onDelete, onUpdate }: ListsProps) {
 					lists.sort(sortSchedulesByDate).map(schedule => {
 						return (
 							<List
+								selected={selected}
+								onSelect={onSelect}
 								onUpdate={onUpdate}
 								key={schedule.id}
 								list={schedule}

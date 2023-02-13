@@ -9,9 +9,13 @@ import { useAuthContext } from './context/AuthContext';
 import messaging from './services/messaging';
 import { PushMessage } from './types/models/models';
 import { ToastContainer, toast } from 'react-toast';
+import { MdPlaylistAdd, MdOutlineAddAlert } from 'react-icons/md';
+import { BiWalk, BiFlag } from 'react-icons/bi';
 
 function App() {
-	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+	const [addForm, setAddForm] = useState(false);
+	const [selected, setSelected] = useState<Schedule>();
+	const [openMessageList, setOpenMessageList] = useState(false);
 	const [schedules, setSchedules] = useState<Schedule[]>([]);
 	const { user } = useAuthContext();
 	const [message, setMessage] = useState<PushMessage | null>(null);
@@ -28,6 +32,10 @@ function App() {
 				token && messaging.updateToken(user, token);
 			});
 	}, []);
+
+	function handleSelect(list: Schedule) {
+		setSelected(list);
+	}
 
 	function handleUpdateSchedule(item: Schedule) {
 		Submit.updateSchedule(item, setSchedules, item.uid);
@@ -87,42 +95,93 @@ function App() {
 	};
 
 	function toggleDialog() {
-		if (!user) {
-			alert('로그인 후 이용이 가능합니다');
-			return;
-		}
-		setIsAddFormOpen(prev => !prev);
+		setAddForm(prev => !prev);
 	}
 
 	return (
-		<div className='flex flex-col h-full '>
+		<div
+			onClick={() => {
+				openMessageList && setOpenMessageList(false);
+			}}
+			className='flex flex-col h-full '
+		>
 			<div>
 				<Header onRefresh={loadLists} />
 				<ToastContainer delay={5000} position='top-center' />
 			</div>
 			<Schedules
+				selected={selected}
+				onSelect={handleSelect}
 				onUpdate={handleUpdateSchedule}
 				onDelete={handleDeleteSchedule}
 				lists={schedules}
 			/>
 
 			{user && (
-				<button
-					className='w-16 h-16 fixed bottom-5 right-5 rounded-full py-6 bg-orange-700'
-					onClick={toggleDialog}
-				>
-					추가
-				</button>
+				<div className='flex items-end gap-5 fixed bottom-5 right-5'>
+					{user.isAdmin && (
+						<ul className='flex flex-col-reverse gap-2'>
+							<li className='relative'>
+								<button
+									className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+									onClick={() => {
+										selected && setOpenMessageList(prev => !prev);
+									}}
+								>
+									<MdOutlineAddAlert />
+								</button>
+							</li>
+							<>
+								<li className='transform '>
+									<button
+										onClick={() => {
+											messaging.sendMessage('head-out', selected?.uid);
+										}}
+										className={`transition-all w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
+											openMessageList
+												? 'translate-y-0 bg-orange-500 '
+												: 'invisible translate-y-full bg-orange-700 opacity-0'
+										}`}
+									>
+										<BiWalk />
+									</button>
+								</li>
+								<li>
+									<button
+										className={`transition-transform w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
+											openMessageList
+												? 'translate-y-0 bg-orange-500'
+												: 'invisible translate-y-full bg-orange-700 opacity-0'
+										}`}
+										onClick={() => {
+											messaging.sendMessage('arrived', selected?.uid);
+										}}
+									>
+										<BiFlag />
+									</button>
+								</li>
+							</>
+						</ul>
+					)}
+					<div>
+						<button
+							className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+							onClick={() => setAddForm(prev => !prev)}
+						>
+							<MdPlaylistAdd />
+						</button>
+					</div>
+				</div>
 			)}
 
-			<div className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
-				{isAddFormOpen && (
+			<ul className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
+				{addForm && (
 					<AddScheduleForm
-						toggleDialog={toggleDialog}
+						toggleDialog={() => setAddForm(prev => !prev)}
 						onAddSchedule={handleAddSchedule}
 					/>
 				)}
-			</div>
+			</ul>
 		</div>
 	);
 }

@@ -1,6 +1,6 @@
 import { Schedule } from '../types/interfaces/interfaces';
 import db from '../services/database';
-import { UpdateList, UpdateLists } from '../types/models/models';
+import { UpdateLists } from '../types/models/models';
 import messaging from '../services/messaging';
 
 const Submit = {

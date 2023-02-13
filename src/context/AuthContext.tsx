@@ -17,7 +17,7 @@ interface AuthContextValue {
 	updateToken(token: string): void;
 }
 
-export type AuthUser = User & { isAdmin: Promise<boolean>; token: string };
+export type AuthUser = User & { isAdmin: boolean; token: string };
 
 interface AuthContextProviderProps {
 	children: ReactNode;
