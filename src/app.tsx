@@ -42,14 +42,6 @@ function App() {
 
 	function handleUpdateSchedule(item: Schedule) {
 		Submit.updateSchedule(item, setSchedules, item.uid);
-		/* setSchedules(lists => {
-			return lists.map(list => {
-				if (list.id === item.id) {
-					return item;
-				}
-				return list;
-			});
-		}); */
 	}
 
 	function loadLists() {
@@ -151,7 +143,7 @@ function App() {
 								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
 								onClick={() => {
 									const permission = window.confirm(
-										`${user.displayName}님의 정산을 진행하시겠습니까?`,
+										`${selected?.uid}님의 정산을 진행하시겠습니까?`,
 									);
 									permission && Submit.account(user.uid, setSchedules);
 								}}

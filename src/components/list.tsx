@@ -59,7 +59,7 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 		<li
 			className={`${
 				(state === 'finished' || state === 'paid') &&
-				'opacity-40 pointer-events-none'
+				`opacity-40 ${user?.isAdmin ? '' : 'pointer-events-none'}`
 			} flex flex-col px-2`}
 		>
 			<div className={'flex items-center justify-between px-1 my-1 '}>
