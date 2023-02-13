@@ -105,13 +105,11 @@ function App() {
 			onClick={() => {
 				openMessageList && setOpenMessageList(false);
 			}}
-			className='flex flex-col h-full '
+			className='flex flex-col h-full z-0'
 		>
-			<>
-				<Header onRefresh={loadLists} />
-				<ToastContainer delay={5000} position='top-center' />
-			</>
-			<nav className='border-b border-zinc-600 mb-4'>
+			<Header onRefresh={loadLists} />
+
+			<nav className='border-b border-zinc-600 mb-4 '>
 				<ul className='flex justify-between  text-center '>
 					<li
 						onClick={() => setNav('inProgress')}
@@ -131,6 +129,8 @@ function App() {
 					</li>
 				</ul>
 			</nav>
+			<ToastContainer position='top-center' />
+
 			{nav === 'inProgress' && (
 				<Schedules
 					selected={selected}

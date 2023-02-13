@@ -15,7 +15,7 @@ function Header({ onRefresh }: HeaderProps) {
 	};
 
 	return (
-		<nav className='w-full flex p-4 text-2xl border-b border-zinc-600 justify-between bg-zinc-900 z-50'>
+		<nav className='w-full flex p-4 text-2xl border-b border-zinc-600 justify-between bg-zinc-900 '>
 			<button onClick={onRefresh} className='flex items-center gap-2'>
 				<h1 className='font-bold ml-2 text-2xl'>예약</h1>
 				{user && <IoMdRefresh />}
