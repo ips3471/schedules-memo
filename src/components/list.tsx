@@ -7,11 +7,9 @@ import Submit from '../presenter/submit';
 import messaging from '../services/messaging';
 import FormContainer from './dialog/form/container';
 
-function List({ list, onDelete }: ListProps) {
+function List({ list, onDelete, onUpdate }: ListProps) {
 	const { user } = useAuthContext();
 	const { date, from, id, isAllow, mission, reward, to, time, uid } = list;
-
-	const [state, setState] = useState(isAllow);
 
 	const handleList = () => {
 		if (isAllow) {
@@ -23,15 +21,9 @@ function List({ list, onDelete }: ListProps) {
 		}
 	};
 
-	const handleState = (e: React.MouseEvent<HTMLButtonElement>) => {
-		if (!user?.isAdmin) {
-			alert('권한이 없습니다');
-			return;
-		}
-		Submit.updateState({ ...list, isAllow: state }, uid, setState);
-		if (user.uid) {
-			messaging.sendMessage('changed', uid);
-		}
+	const handleUpdateState = (e: React.MouseEvent<HTMLButtonElement>) => {
+		if (!user?.isAdmin) return;
+		onUpdate({ ...list, isAllow: !isAllow });
 	};
 
 	return (
@@ -49,14 +41,14 @@ function List({ list, onDelete }: ListProps) {
 						</>
 					</button>
 					<button
-						onClick={handleState}
+						onClick={handleUpdateState}
 						className={`ml-4 py-3 px-4 border-2 border-zinc-800 text-xs white-space-nowrap ${
-							state ? 'bg-orange-600  font-bold' : ''
+							isAllow ? 'bg-orange-600  font-bold' : ''
 						}`}
 					>
 						수락
 						<br />
-						{state ? '완료' : '대기'}
+						{isAllow ? '완료' : '대기'}
 					</button>
 				</div>
 				<div className='border-y-2 py-1 border-zinc-800 px-appBody flex justify-between items-center h-9 text-sm'>

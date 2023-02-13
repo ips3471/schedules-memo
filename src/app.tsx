@@ -12,7 +12,7 @@ import { ToastContainer, toast } from 'react-toast';
 
 function App() {
 	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-	const [schedules, setSchedules] = useState([]);
+	const [schedules, setSchedules] = useState<Schedule[]>([]);
 	const { user } = useAuthContext();
 	const [message, setMessage] = useState<PushMessage | null>(null);
 
@@ -28,6 +28,23 @@ function App() {
 				token && messaging.updateToken(user, token);
 			});
 	}, []);
+
+	function handleUpdateSchedule(item: Schedule) {
+		Submit.updateSchedule(item, setSchedules, item.uid);
+		setSchedules(lists => {
+			return lists.map(list => {
+				if (list.id === item.id) {
+					return item;
+				}
+				return list;
+			});
+		});
+	}
+
+	function loadLists() {
+		console.log('load lists');
+		user && Submit.getLists(user.uid, setSchedules);
+	}
 
 	function popUpNotification(title: string, body: string) {
 		console.log(title, body);
@@ -45,7 +62,7 @@ function App() {
 	}, [message]);
 
 	useEffect(() => {
-		user && Submit.getLists(user.uid, setSchedules);
+		loadLists();
 	}, [user]);
 
 	const handleAddSchedule = (form: Schedule) => {
@@ -80,10 +97,14 @@ function App() {
 	return (
 		<div className='flex flex-col h-full '>
 			<div>
-				<Header />
+				<Header onRefresh={loadLists} />
 				<ToastContainer delay={5000} position='top-center' />
 			</div>
-			<Schedules onDelete={handleDeleteSchedule} lists={schedules} />
+			<Schedules
+				onUpdate={handleUpdateSchedule}
+				onDelete={handleDeleteSchedule}
+				lists={schedules}
+			/>
 
 			{user && (
 				<button

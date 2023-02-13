@@ -1,6 +1,7 @@
 import { Schedule } from '../types/interfaces/interfaces';
 import db from '../services/database';
 import { UpdateList, UpdateLists } from '../types/models/models';
+import messaging from '../services/messaging';
 
 const Submit = {
 	addSchedule(schedule: Schedule, uid: string, update: UpdateLists<Schedule>) {
@@ -26,10 +27,24 @@ const Submit = {
 		}
 	},
 
-	updateState(list: Schedule, uid: string, update: UpdateList<boolean>) {
-		const updated = { ...list, isAllow: !list.isAllow };
+	updateSchedule(
+		updated: Schedule,
+		update: UpdateLists<Schedule>,
+		uid?: string,
+	) {
+		if (!uid) {
+			throw new Error('Not found User Authentication');
+		}
 		db.updateList(updated, uid);
-		update(!list.isAllow);
+		update(lists => {
+			return lists.map(list => {
+				if (list.id === updated.id) {
+					return updated;
+				}
+				return list;
+			});
+		});
+		messaging.sendMessage('changed', uid);
 	},
 };
 
