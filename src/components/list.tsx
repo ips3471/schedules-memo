@@ -1,16 +1,20 @@
 import DateItem from './body/list/date';
 import PlaceItem from './body/list/place';
 import { ListProps } from '../types/components/components';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useAuthContext } from '../context/AuthContext';
+import { State } from '../types/interfaces/interfaces';
 
 function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 	const { user } = useAuthContext();
-	const { date, from, id, isAllow, mission, reward, to, time, uid } = list;
+	const { date, from, id, state, mission, reward, to, time, uid } = list;
 
 	const handleList = () => {
-		if (isAllow) {
-			return alert('이미 수락된 스케줄을 임의로 삭제할 수 없습니다');
+		if (state === 'finished') {
+			return alert('완료된 운행건을 임의로 삭제할 수 없습니다');
+		}
+		if (state === 'canceled') {
+			return alert('이미 취소를 요청한 운행건입니다');
 		}
 		const isRemoving = window.confirm('해당 리스트를 삭제하시겠습니까?');
 		if (isRemoving) {
@@ -19,49 +23,73 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 	};
 
 	const handleUpdateState = (e: React.MouseEvent<HTMLButtonElement>) => {
-		if (!user?.isAdmin) return;
-		onUpdate({ ...list, isAllow: !isAllow });
+		if (
+			!user?.isAdmin ||
+			state === 'canceled' ||
+			state === 'finished' ||
+			state === 'paid'
+		)
+			return;
+		const updated: State = state === 'pending' ? 'confirmed' : 'pending';
+
+		onUpdate({ ...list, state: updated });
 	};
+	function genStateButton(children: string) {
+		return (
+			<button
+				onClick={handleUpdateState}
+				className={`ml-4 py-3 px-4 border-2 border-zinc-800 text-xs white-space-nowrap ${
+					state === 'confirmed' || state === 'paid' || state === 'finished'
+						? 'bg-orange-600  font-bold'
+						: ''
+				}`}
+			>
+				{children.slice(0, 2)} <br /> {children.slice(2, 4)}
+			</button>
+		);
+	}
 
 	return (
-		<>
-			<li className='flex flex-col px-2'>
-				<div className={'flex items-center justify-between px-1 my-1 '}>
-					<DateItem
-						list={list}
-						onSelect={onSelect}
-						date={date}
-						selected={selected}
-					/>
-					<button
-						onClick={handleList}
-						className='flex flex-1 items-center justify-between text-left'
-					>
-						<>
-							<PlaceItem from={from} to={to} />
-							<span className='text-sm'>{reward.toLocaleString()}원</span>
-						</>
-					</button>
-					<button
-						onClick={handleUpdateState}
-						className={`ml-4 py-3 px-4 border-2 border-zinc-800 text-xs white-space-nowrap ${
-							isAllow ? 'bg-orange-600  font-bold' : ''
-						}`}
-					>
-						수락
-						<br />
-						{isAllow ? '완료' : '대기'}
-					</button>
-				</div>
-				<div className='border-y-2 py-1 border-zinc-800 px-appBody flex justify-between items-center h-9 text-sm'>
-					{mission && <div>{mission}</div>}
-					{!mission && (
-						<span className='opacity-40'>입력된 요청사항이 없습니다.</span>
-					)}
-					<span>{time} 출발 예정</span>
-				</div>
-			</li>
-		</>
+		<li
+			className={`${
+				state === 'finished' && 'opacity-40 pointer-events-none'
+			} flex flex-col px-2`}
+		>
+			<div className={'flex items-center justify-between px-1 my-1 '}>
+				<DateItem
+					list={list}
+					onSelect={onSelect}
+					date={date}
+					selected={selected}
+				/>
+				<button
+					onClick={handleList}
+					className='flex flex-1 items-center justify-between text-left'
+				>
+					<>
+						<PlaceItem from={from} to={to} />
+						<span className='text-sm'>{reward.toLocaleString()}원</span>
+					</>
+				</button>
+				<>
+					{state === 'canceled' && genStateButton('취소요청')}
+					{state === 'confirmed' && genStateButton('예약완료')}
+					{state === 'finished' && genStateButton('운행완료')}
+					{state === 'paid' && genStateButton('정산완료')}
+					{state === 'pending' && genStateButton('예약대기')}
+				</>
+			</div>
+			<div className='border-y-2 py-1 border-zinc-800 px-appBody flex justify-between items-center h-9 text-sm'>
+				{mission && <div>{mission}</div>}
+				{!mission && (
+					<span className='opacity-40'>입력된 요청사항이 없습니다.</span>
+				)}
+				{state === 'pending' && <span>{time} 출발 예정</span>}
+				{state === 'confirmed' && <span>{time} 출발 예정</span>}
+				{state === 'canceled' && <span>취소 에정</span>}
+				{state === 'finished' && <span>운행 완료</span>}
+			</div>
+		</li>
 	);
 }
 

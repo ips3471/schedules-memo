@@ -11,6 +11,7 @@ import { PushMessage } from './types/models/models';
 import { ToastContainer, toast } from 'react-toast';
 import { MdPlaylistAdd, MdOutlineAddAlert } from 'react-icons/md';
 import { BiWalk, BiFlag } from 'react-icons/bi';
+import { NavItem } from './types/components/components';
 
 function App() {
 	const [addForm, setAddForm] = useState(false);
@@ -19,6 +20,7 @@ function App() {
 	const [schedules, setSchedules] = useState<Schedule[]>([]);
 	const { user } = useAuthContext();
 	const [message, setMessage] = useState<PushMessage | null>(null);
+	const [nav, setNav] = useState<NavItem>('inProgress');
 
 	useEffect(() => {
 		messaging.addMessageListener(popUpNotification);
@@ -105,17 +107,48 @@ function App() {
 			}}
 			className='flex flex-col h-full '
 		>
-			<div>
+			<>
 				<Header onRefresh={loadLists} />
 				<ToastContainer delay={5000} position='top-center' />
-			</div>
-			<Schedules
-				selected={selected}
-				onSelect={handleSelect}
-				onUpdate={handleUpdateSchedule}
-				onDelete={handleDeleteSchedule}
-				lists={schedules}
-			/>
+			</>
+			<nav className='border-b border-zinc-600 mb-4'>
+				<ul className='flex justify-between  text-center '>
+					<li
+						onClick={() => setNav('inProgress')}
+						className={`flex-1 py-5  border-r border-zinc-600 ${
+							nav === 'inProgress' && 'bg-orange-600 text-slate-100 font-medium'
+						}`}
+					>
+						진행중
+					</li>
+					<li
+						onClick={() => setNav('isFinished')}
+						className={`flex-1 py-5  ${
+							nav === 'isFinished' && 'bg-orange-600 text-slate-100 font-medium'
+						}`}
+					>
+						지난 여정
+					</li>
+				</ul>
+			</nav>
+			{nav === 'inProgress' && (
+				<Schedules
+					selected={selected}
+					onSelect={handleSelect}
+					onUpdate={handleUpdateSchedule}
+					onDelete={handleDeleteSchedule}
+					lists={schedules.filter(s => s.state !== 'paid')}
+				/>
+			)}
+			{nav === 'isFinished' && (
+				<Schedules
+					selected={selected}
+					onSelect={handleSelect}
+					onUpdate={handleUpdateSchedule}
+					onDelete={handleDeleteSchedule}
+					lists={schedules.filter(s => s.state === 'paid')}
+				/>
+			)}
 
 			{user && (
 				<div className='flex items-end gap-5 fixed bottom-5 right-5'>

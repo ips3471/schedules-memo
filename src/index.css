@@ -32,7 +32,7 @@ span {
 
 input,
 select {
-	@apply w-full text-gray-900 h-10 p-2;
+	@apply w-full text-gray-900 h-10 p-2 select-none;
 }
 
 code {

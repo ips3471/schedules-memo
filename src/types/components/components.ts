@@ -24,3 +24,5 @@ export type ListProps = {
 export type HeaderProps = {
 	onRefresh: () => void;
 };
+
+export type NavItem = 'inProgress' | 'isFinished';
