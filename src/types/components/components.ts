@@ -6,11 +6,23 @@ export type AddScheduleFormProps = {
 };
 
 export type ListsProps = {
-	lists: Schedule[];
+	children: Schedule[];
 	onDelete: (schedule: Schedule) => void;
+	onUpdate: (schedule: Schedule) => void;
+	onSelect: (schedule: Schedule) => void;
+	selected?: Schedule;
 };
 
 export type ListProps = {
 	list: Schedule;
 	onDelete: (schedule: Schedule) => void;
+	onUpdate: (schedule: Schedule) => void;
+	onSelect: (schedule: Schedule) => void;
+	selected?: Schedule;
 };
+
+export type HeaderProps = {
+	onRefresh: () => void;
+};
+
+export type NavItem = 'inProgress' | 'isFinished';

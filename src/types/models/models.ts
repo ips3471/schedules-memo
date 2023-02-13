@@ -13,4 +13,9 @@ export type User = {
 	token?: string;
 };
 
-export type SendNotificationType = 'changed' | 'submitted';
+export type SendNotificationType =
+	| 'changed'
+	| 'submitted'
+	| 'head-out'
+	| 'arrived'
+	| 'accounted';

@@ -46,12 +46,12 @@ const _defaultForm: Schedule = {
 		getFullDateFormat(new Date().getDate() + 1),
 	from: '대치삼성래미안',
 	to: '디지털허브치과의원',
-	isAllow: false,
 	mission: '',
 	reward: 36000,
 	time: '07:40',
 	id: undefined,
 	uid: '',
+	state: 'pending',
 };
 
 function getFullDateFormat(monthOrDate: number): string {

@@ -9,12 +9,19 @@ import { useAuthContext } from './context/AuthContext';
 import messaging from './services/messaging';
 import { PushMessage } from './types/models/models';
 import { ToastContainer, toast } from 'react-toast';
+import { MdPlaylistAdd, MdOutlineAddAlert } from 'react-icons/md';
+import { BiWalk, BiFlag } from 'react-icons/bi';
+import { NavItem } from './types/components/components';
+import { GiToken } from 'react-icons/gi';
 
 function App() {
-	const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-	const [schedules, setSchedules] = useState([]);
+	const [addForm, setAddForm] = useState(false);
+	const [selected, setSelected] = useState<Schedule>();
+	const [openMessageList, setOpenMessageList] = useState(false);
+	const [schedules, setSchedules] = useState<Schedule[]>([]);
 	const { user } = useAuthContext();
 	const [message, setMessage] = useState<PushMessage | null>(null);
+	const [nav, setNav] = useState<NavItem>('inProgress');
 
 	useEffect(() => {
 		messaging.addMessageListener(popUpNotification);
@@ -28,6 +35,19 @@ function App() {
 				token && messaging.updateToken(user, token);
 			});
 	}, []);
+
+	function handleSelect(list: Schedule) {
+		setSelected(list);
+	}
+
+	function handleUpdateSchedule(item: Schedule) {
+		Submit.updateSchedule(item, setSchedules, item.uid);
+	}
+
+	function loadLists() {
+		console.log('load lists');
+		user && Submit.getLists(user.uid, setSchedules);
+	}
 
 	function popUpNotification(title: string, body: string) {
 		console.log(title, body);
@@ -45,7 +65,7 @@ function App() {
 	}, [message]);
 
 	useEffect(() => {
-		user && Submit.getLists(user.uid, setSchedules);
+		loadLists();
 	}, [user]);
 
 	const handleAddSchedule = (form: Schedule) => {
@@ -64,42 +84,137 @@ function App() {
 	const handleDeleteSchedule = (schedule: Schedule) => {
 		Submit.removeSchedule(schedule, setSchedules);
 		messaging.sendMessage(
-			'submitted',
+			'changed',
 			process.env.REACT_APP_FIREBASE_ADMIN! as string,
 		);
 	};
 
 	function toggleDialog() {
-		if (!user) {
-			alert('로그인 후 이용이 가능합니다');
-			return;
-		}
-		setIsAddFormOpen(prev => !prev);
+		setAddForm(prev => !prev);
 	}
 
 	return (
-		<div className='flex flex-col h-full '>
-			<div>
-				<Header />
-				<ToastContainer delay={5000} position='top-center' />
-			</div>
-			<Schedules onDelete={handleDeleteSchedule} lists={schedules} />
+		<div
+			onClick={() => {
+				openMessageList && setOpenMessageList(false);
+			}}
+			className='flex flex-col h-full z-0'
+		>
+			<Header onRefresh={loadLists} />
 
-			<button
-				className='w-16 h-16 fixed bottom-5 right-5 rounded-full py-6 bg-orange-700'
-				onClick={toggleDialog}
+			<nav className='border-b border-zinc-600 mb-4 '>
+				<ul className='flex justify-between  text-center '>
+					<li
+						onClick={() => setNav('inProgress')}
+						className={`flex-1 py-5  border-r border-zinc-600 ${
+							nav === 'inProgress' && 'bg-orange-600 text-slate-100 font-medium'
+						}`}
+					>
+						진행중
+					</li>
+					<li
+						onClick={() => setNav('isFinished')}
+						className={`flex-1 py-5  ${
+							nav === 'isFinished' && 'bg-orange-600 text-slate-100 font-medium'
+						}`}
+					>
+						지난 여정
+					</li>
+				</ul>
+			</nav>
+			<ToastContainer position='top-center' />
+
+			<Schedules
+				selected={selected}
+				onSelect={handleSelect}
+				onUpdate={handleUpdateSchedule}
+				onDelete={handleDeleteSchedule}
 			>
-				추가
-			</button>
+				{nav === 'isFinished'
+					? schedules.filter(s => s.state === 'paid')
+					: schedules.filter(s => s.state !== 'paid')}
+			</Schedules>
 
-			<div className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
-				{isAddFormOpen && (
+			{user && (
+				<div className='flex items-end gap-5 fixed bottom-5 right-5'>
+					{user.isAdmin && (
+						<div>
+							<button
+								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+								onClick={() => {
+									const permission = window.confirm(
+										`${selected?.uid}님의 정산을 진행하시겠습니까?`,
+									);
+									permission && Submit.account(user.uid, setSchedules);
+								}}
+							>
+								<GiToken />
+							</button>
+						</div>
+					)}
+					{user.isAdmin && (
+						<ul className='flex flex-col-reverse gap-2 relative'>
+							<li className=''>
+								<button
+									className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+									onClick={() => {
+										selected && setOpenMessageList(prev => !prev);
+									}}
+								>
+									<MdOutlineAddAlert />
+								</button>
+							</li>
+							<>
+								<li className='transform '>
+									<button
+										onClick={() => {
+											messaging.sendMessage('head-out', selected?.uid);
+										}}
+										className={`transition-all w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
+											openMessageList
+												? 'translate-y-0 bg-orange-500 '
+												: 'invisible translate-y-full bg-orange-700 opacity-0'
+										}`}
+									>
+										<BiWalk />
+									</button>
+								</li>
+								<li>
+									<button
+										className={`transition-transform w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
+											openMessageList
+												? 'translate-y-0 bg-orange-500'
+												: 'invisible translate-y-full bg-orange-700 opacity-0'
+										}`}
+										onClick={() => {
+											messaging.sendMessage('arrived', selected?.uid);
+										}}
+									>
+										<BiFlag />
+									</button>
+								</li>
+							</>
+						</ul>
+					)}
+					<div>
+						<button
+							className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+							onClick={() => setAddForm(prev => !prev)}
+						>
+							<MdPlaylistAdd />
+						</button>
+					</div>
+				</div>
+			)}
+
+			<ul className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
+				{addForm && (
 					<AddScheduleForm
-						toggleDialog={toggleDialog}
+						toggleDialog={() => setAddForm(prev => !prev)}
 						onAddSchedule={handleAddSchedule}
 					/>
 				)}
-			</div>
+			</ul>
 		</div>
 	);
 }

@@ -4,7 +4,13 @@ import { ListsProps } from '../types/components/components';
 import { Schedule } from '../types/interfaces/interfaces';
 import List from './list';
 
-function Schedules({ lists, onDelete }: ListsProps) {
+function Schedules({
+	children,
+	onDelete,
+	onUpdate,
+	onSelect,
+	selected,
+}: ListsProps) {
 	const { user } = useAuthContext();
 
 	const sortSchedulesByDate = (a: Schedule, b: Schedule) => {
@@ -22,11 +28,18 @@ function Schedules({ lists, onDelete }: ListsProps) {
 	return (
 		<div className='flex-1'>
 			<ul>
-				{lists &&
+				{children &&
 					user &&
-					lists.sort(sortSchedulesByDate).map(schedule => {
+					children.sort(sortSchedulesByDate).map(schedule => {
 						return (
-							<List key={schedule.id} list={schedule} onDelete={onDelete} />
+							<List
+								selected={selected}
+								onSelect={onSelect}
+								onUpdate={onUpdate}
+								key={schedule.id}
+								list={schedule}
+								onDelete={onDelete}
+							/>
 						);
 					})}
 				{!user && (

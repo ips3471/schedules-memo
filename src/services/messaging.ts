@@ -63,9 +63,12 @@ const messaging = {
 		db.removeUserToken(user);
 	},
 
-	async sendMessage(type: SendNotificationType, uid: string) {
+	async sendMessage(type: SendNotificationType, uid?: string) {
 		const foundToken = await db.getUserToken(uid);
 		console.log(foundToken);
+		if (!foundToken) {
+			throw new Error('Fund Token Failed');
+		}
 
 		const myHeaders = new Headers();
 		myHeaders.append('Content-Type', 'application/json');
@@ -98,6 +101,13 @@ const messaging = {
 				return genBodyAndFetch('변경된 내용이 있습니다');
 			case 'submitted':
 				return genBodyAndFetch('새로운 스케줄이 있습니다');
+
+			case 'head-out':
+				return genBodyAndFetch('출발지로 이동중입니다');
+			case 'arrived':
+				return genBodyAndFetch('출발지에 도착했습니다');
+			case 'accounted':
+				return genBodyAndFetch('기존 운행건이 정산되었습니다');
 		}
 	},
 };

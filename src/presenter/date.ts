@@ -5,13 +5,14 @@ class DatePresenter {
 	constructor(date: string) {
 		this.date = new Date(date);
 		this._dateArr = ['일', '월', '화', '수', '목', '금', '토'];
-		this.diffDay = Math.ceil(
-			(Number(this.date) - Number(new Date())) / 1000 / 60 / 60 / 24,
-		);
+		this.diffDay = new Date(date).getDate() - new Date().getDate();
 	}
 
 	getDate() {
-		if (this.diffDay >= 0 && this.diffDay <= 3) {
+		if (this.diffDay === 0) {
+			return '🕛오늘';
+		}
+		if (this.diffDay > 0 && this.diffDay <= 3) {
 			return 'D - ' + Math.abs(this.diffDay);
 		}
 
