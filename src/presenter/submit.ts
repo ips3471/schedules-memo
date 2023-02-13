@@ -27,6 +27,16 @@ const Submit = {
 		}
 	},
 
+	async account(uid: string, update: UpdateLists<Schedule>) {
+		await db
+			.getLists(uid)
+			.then(lists => lists.filter(list => list.state === 'finished'))
+			.then(filtered => {
+				updateFromList(filtered, uid, update);
+			});
+		messaging.sendMessage('accounted', uid);
+	},
+
 	updateSchedule(
 		updated: Schedule,
 		update: UpdateLists<Schedule>,
@@ -49,3 +59,22 @@ const Submit = {
 };
 
 export default Submit;
+
+function updateFromList(
+	filtered: Schedule[],
+	uid: string,
+	update: UpdateLists<Schedule>,
+) {
+	filtered.forEach(list => {
+		const element: Schedule = { ...list, state: 'paid' };
+		db.updateList(element, uid);
+		update(prev => {
+			return prev.map(item => {
+				if (item.state === 'finished') {
+					return element;
+				}
+				return item;
+			});
+		});
+	});
+}

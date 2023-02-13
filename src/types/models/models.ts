@@ -17,4 +17,5 @@ export type SendNotificationType =
 	| 'changed'
 	| 'submitted'
 	| 'head-out'
-	| 'arrived';
+	| 'arrived'
+	| 'accounted';

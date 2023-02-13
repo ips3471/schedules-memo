@@ -104,9 +104,10 @@ const messaging = {
 
 			case 'head-out':
 				return genBodyAndFetch('출발지로 이동중입니다');
-
 			case 'arrived':
 				return genBodyAndFetch('출발지에 도착했습니다');
+			case 'accounted':
+				return genBodyAndFetch('기존 운행건이 정산되었습니다');
 		}
 	},
 };
