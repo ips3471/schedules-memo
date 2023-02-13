@@ -85,12 +85,14 @@ function App() {
 			</div>
 			<Schedules onDelete={handleDeleteSchedule} lists={schedules} />
 
-			<button
-				className='w-16 h-16 fixed bottom-5 right-5 rounded-full py-6 bg-orange-700'
-				onClick={toggleDialog}
-			>
-				추가
-			</button>
+			{user && (
+				<button
+					className='w-16 h-16 fixed bottom-5 right-5 rounded-full py-6 bg-orange-700'
+					onClick={toggleDialog}
+				>
+					추가
+				</button>
+			)}
 
 			<div className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
 				{isAddFormOpen && (
