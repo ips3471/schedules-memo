@@ -9,7 +9,10 @@ class DatePresenter {
 	}
 
 	getDate() {
-		if (this.diffDay >= 0 && this.diffDay <= 3) {
+		if (this.diffDay === 0) {
+			return '🕛오늘';
+		}
+		if (this.diffDay > 0 && this.diffDay <= 3) {
 			return 'D - ' + Math.abs(this.diffDay);
 		}
 
