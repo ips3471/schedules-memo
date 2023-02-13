@@ -6,7 +6,7 @@ import { useAuthContext } from '../context/AuthContext';
 import { State } from '../types/interfaces/interfaces';
 import { MdOutlinePending } from 'react-icons/md';
 import { GiConfirmed } from 'react-icons/gi';
-import { GrScheduleNew } from 'react-icons/gr';
+import { AiFillCarryOut } from 'react-icons/ai';
 
 function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 	const { user } = useAuthContext();
@@ -86,7 +86,7 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 					{state === 'pending' && genStateButton('예약대기')}
 					{selectedState === null && (
 						<ul className='absolute top-0 -left-14 flex flex-col gap-1'>
-							<li className=''>
+							<li className={state === 'pending' ? 'hidden' : ''}>
 								<button
 									onClick={() => handleUpdateState('pending')}
 									className='p-3 flex justify-center items-center text-gray-200  bg-orange-700 rounded-full opacity-90 text-3xl border-zinc-400 border w-16 h-16  '
@@ -94,7 +94,7 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 									<MdOutlinePending />
 								</button>
 							</li>
-							<li className=''>
+							<li className={state === 'confirmed' ? 'hidden' : ''}>
 								<button
 									onClick={() => handleUpdateState('confirmed')}
 									className='p-3 flex justify-center items-center text-gray-200  bg-orange-700 rounded-full opacity-90 text-3xl border-zinc-400 border w-16 h-16 '
@@ -102,12 +102,12 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 									<GiConfirmed />
 								</button>
 							</li>
-							<li className=''>
+							<li className={state !== 'confirmed' ? 'hidden' : ''}>
 								<button
 									onClick={() => handleUpdateState('finished')}
 									className='p-3 flex justify-center items-center text-gray-200  bg-orange-700 rounded-full opacity-90 text-3xl border-zinc-400 border w-16 h-16 '
 								>
-									<GrScheduleNew />
+									<AiFillCarryOut />
 								</button>
 							</li>
 						</ul>
