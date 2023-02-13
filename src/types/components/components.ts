@@ -6,7 +6,7 @@ export type AddScheduleFormProps = {
 };
 
 export type ListsProps = {
-	lists: Schedule[];
+	children: Schedule[];
 	onDelete: (schedule: Schedule) => void;
 	onUpdate: (schedule: Schedule) => void;
 	onSelect: (schedule: Schedule) => void;

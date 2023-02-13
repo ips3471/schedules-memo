@@ -5,7 +5,7 @@ import { Schedule } from '../types/interfaces/interfaces';
 import List from './list';
 
 function Schedules({
-	lists,
+	children,
 	onDelete,
 	onUpdate,
 	onSelect,
@@ -28,9 +28,9 @@ function Schedules({
 	return (
 		<div className='flex-1'>
 			<ul>
-				{lists &&
+				{children &&
 					user &&
-					lists.sort(sortSchedulesByDate).map(schedule => {
+					children.sort(sortSchedulesByDate).map(schedule => {
 						return (
 							<List
 								selected={selected}

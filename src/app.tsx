@@ -131,24 +131,16 @@ function App() {
 			</nav>
 			<ToastContainer position='top-center' />
 
-			{nav === 'inProgress' && (
-				<Schedules
-					selected={selected}
-					onSelect={handleSelect}
-					onUpdate={handleUpdateSchedule}
-					onDelete={handleDeleteSchedule}
-					lists={schedules.filter(s => s.state !== 'paid')}
-				/>
-			)}
-			{nav === 'isFinished' && (
-				<Schedules
-					selected={selected}
-					onSelect={handleSelect}
-					onUpdate={handleUpdateSchedule}
-					onDelete={handleDeleteSchedule}
-					lists={schedules.filter(s => s.state === 'paid')}
-				/>
-			)}
+			<Schedules
+				selected={selected}
+				onSelect={handleSelect}
+				onUpdate={handleUpdateSchedule}
+				onDelete={handleDeleteSchedule}
+			>
+				{nav === 'isFinished'
+					? schedules.filter(s => s.state === 'paid')
+					: schedules.filter(s => s.state !== 'paid')}
+			</Schedules>
 
 			{user && (
 				<div className='flex items-end gap-5 fixed bottom-5 right-5'>
