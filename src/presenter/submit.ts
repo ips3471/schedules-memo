@@ -37,7 +37,11 @@ const Submit = {
 		}
 	},
 
-	async account(uid: string = '', update: UpdateLists<Schedule>) {
+	async account(
+		uid: string = '',
+		update: UpdateLists<Schedule>,
+		callback: (title: string, body: string) => void,
+	) {
 		if (!uid) {
 			throw new Error('Not Found UID');
 		}
@@ -47,13 +51,14 @@ const Submit = {
 			.then(filtered => {
 				updateFromList(filtered, uid, update);
 			});
-		messaging.sendMessage('accounted', uid);
+		messaging.sendMessage('accounted', uid, callback);
 	},
 
 	updateSchedule(
 		updated: Schedule,
 		update: UpdateLists<Schedule>,
-		uid?: string,
+		uid: string = '',
+		callback: (title: string, body: string) => void,
 	) {
 		if (!uid) {
 			throw new Error('Not found User Authentication');
@@ -67,7 +72,7 @@ const Submit = {
 				return list;
 			});
 		});
-		messaging.sendMessage('changed', uid);
+		messaging.sendMessage('changed', uid, callback);
 	},
 };
 
