@@ -37,7 +37,10 @@ const Submit = {
 		}
 	},
 
-	async account(uid: string, update: UpdateLists<Schedule>) {
+	async account(uid: string = '', update: UpdateLists<Schedule>) {
+		if (!uid) {
+			throw new Error('Not Found UID');
+		}
 		await db
 			.getLists(uid)
 			.then(lists => lists.filter(list => list.state === 'finished'))

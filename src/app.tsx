@@ -143,9 +143,9 @@ function App() {
 								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
 								onClick={() => {
 									const permission = window.confirm(
-										`${selected?.uid}님의 정산을 진행하시겠습니까?`,
+										`${selected?.displayName}님의 모든 운행완료건을 정산하시겠습니까?`,
 									);
-									permission && Submit.account(user.uid, setSchedules);
+									permission && Submit.account(selected?.uid, setSchedules);
 								}}
 							>
 								<GiToken />
