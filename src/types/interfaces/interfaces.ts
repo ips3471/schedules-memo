@@ -8,6 +8,7 @@ export interface Schedule {
 	to: string;
 	uid: string;
 	state: State;
+	displayName?: string;
 }
 
 export type State = 'pending' | 'confirmed' | 'canceled' | 'finished' | 'paid';

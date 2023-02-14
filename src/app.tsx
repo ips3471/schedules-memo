@@ -72,7 +72,7 @@ function App() {
 		if (!user) {
 			throw new Error('잘못된 접근: User Authentication Error');
 		}
-		Submit.addSchedule(form, user.uid, setSchedules);
+		Submit.addSchedule(form, user, setSchedules);
 		messaging.sendMessage(
 			'submitted',
 			process.env.REACT_APP_FIREBASE_ADMIN! as string,

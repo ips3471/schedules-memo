@@ -2,10 +2,20 @@ import { Schedule } from '../types/interfaces/interfaces';
 import db from '../services/database';
 import { UpdateLists } from '../types/models/models';
 import messaging from '../services/messaging';
+import auth from '../services/auth';
+import { AuthUser } from '../context/AuthContext';
 
 const Submit = {
-	addSchedule(schedule: Schedule, uid: string, update: UpdateLists<Schedule>) {
-		const newList = db.addList(schedule, uid);
+	addSchedule(
+		schedule: Schedule,
+		user: AuthUser,
+		update: UpdateLists<Schedule>,
+	) {
+		const element: Schedule = {
+			...schedule,
+			displayName: user.displayName || 'unknown',
+		};
+		const newList = db.addList(element, user.uid);
 		update(prev => [...prev, newList]);
 	},
 
