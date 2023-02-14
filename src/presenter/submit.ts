@@ -2,10 +2,20 @@ import { Schedule } from '../types/interfaces/interfaces';
 import db from '../services/database';
 import { UpdateLists } from '../types/models/models';
 import messaging from '../services/messaging';
+import auth from '../services/auth';
+import { AuthUser } from '../context/AuthContext';
 
 const Submit = {
-	addSchedule(schedule: Schedule, uid: string, update: UpdateLists<Schedule>) {
-		const newList = db.addList(schedule, uid);
+	addSchedule(
+		schedule: Schedule,
+		user: AuthUser,
+		update: UpdateLists<Schedule>,
+	) {
+		const element: Schedule = {
+			...schedule,
+			displayName: user.displayName || 'unknown',
+		};
+		const newList = db.addList(element, user.uid);
 		update(prev => [...prev, newList]);
 	},
 
@@ -27,20 +37,28 @@ const Submit = {
 		}
 	},
 
-	async account(uid: string, update: UpdateLists<Schedule>) {
+	async account(
+		uid: string = '',
+		update: UpdateLists<Schedule>,
+		callback: (title: string, body: string) => void,
+	) {
+		if (!uid) {
+			throw new Error('Not Found UID');
+		}
 		await db
 			.getLists(uid)
 			.then(lists => lists.filter(list => list.state === 'finished'))
 			.then(filtered => {
 				updateFromList(filtered, uid, update);
 			});
-		messaging.sendMessage('accounted', uid);
+		messaging.sendMessage('accounted', uid, callback);
 	},
 
 	updateSchedule(
 		updated: Schedule,
 		update: UpdateLists<Schedule>,
-		uid?: string,
+		uid: string = '',
+		callback: (title: string, body: string) => void,
 	) {
 		if (!uid) {
 			throw new Error('Not found User Authentication');
@@ -54,7 +72,7 @@ const Submit = {
 				return list;
 			});
 		});
-		messaging.sendMessage('changed', uid);
+		messaging.sendMessage('changed', uid, callback);
 	},
 };
 

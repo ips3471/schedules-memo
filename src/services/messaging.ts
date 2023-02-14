@@ -63,7 +63,11 @@ const messaging = {
 		db.removeUserToken(user);
 	},
 
-	async sendMessage(type: SendNotificationType, uid?: string) {
+	async sendMessage(
+		type: SendNotificationType,
+		uid: string = '',
+		callback: (title: string, body: string) => void,
+	) {
 		const foundToken = await db.getUserToken(uid);
 		console.log(foundToken);
 		if (!foundToken) {
@@ -91,8 +95,10 @@ const messaging = {
 				body: raw,
 			};
 			fetch(messaging.baseURL, requestOptions)
-				.then(response => response.text())
-				.then(result => console.log(result))
+				.then(response => response.json())
+				.then(result => {
+					result.success > 0 && callback('success', '전송이 완료되었습니다');
+				})
 				.catch(error => console.log('error', error));
 		}
 

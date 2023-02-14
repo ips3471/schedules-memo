@@ -52,6 +52,7 @@ const _defaultForm: Schedule = {
 	id: undefined,
 	uid: '',
 	state: 'pending',
+	displayName: undefined,
 };
 
 function getFullDateFormat(monthOrDate: number): string {

@@ -41,7 +41,7 @@ function App() {
 	}
 
 	function handleUpdateSchedule(item: Schedule) {
-		Submit.updateSchedule(item, setSchedules, item.uid);
+		Submit.updateSchedule(item, setSchedules, item.uid, popUpNotification);
 	}
 
 	function loadLists() {
@@ -51,9 +51,6 @@ function App() {
 
 	function popUpNotification(title: string, body: string) {
 		console.log(title, body);
-		setTimeout(() => {
-			setMessage(null);
-		}, 5000);
 		setMessage(prev => ({ title, body }));
 	}
 
@@ -72,10 +69,11 @@ function App() {
 		if (!user) {
 			throw new Error('잘못된 접근: User Authentication Error');
 		}
-		Submit.addSchedule(form, user.uid, setSchedules);
+		Submit.addSchedule(form, user, setSchedules);
 		messaging.sendMessage(
 			'submitted',
 			process.env.REACT_APP_FIREBASE_ADMIN! as string,
+			popUpNotification,
 		);
 
 		toggleDialog();
@@ -86,6 +84,7 @@ function App() {
 		messaging.sendMessage(
 			'changed',
 			process.env.REACT_APP_FIREBASE_ADMIN! as string,
+			popUpNotification,
 		);
 	};
 
@@ -106,7 +105,7 @@ function App() {
 				<ul className='flex justify-between  text-center '>
 					<li
 						onClick={() => setNav('inProgress')}
-						className={`flex-1 py-5  border-r border-zinc-600 ${
+						className={`flex-1 py-3  border-r border-zinc-600 ${
 							nav === 'inProgress' && 'bg-orange-600 text-slate-100 font-medium'
 						}`}
 					>
@@ -114,7 +113,7 @@ function App() {
 					</li>
 					<li
 						onClick={() => setNav('isFinished')}
-						className={`flex-1 py-5  ${
+						className={`flex-1 py-3  ${
 							nav === 'isFinished' && 'bg-orange-600 text-slate-100 font-medium'
 						}`}
 					>
@@ -143,9 +142,14 @@ function App() {
 								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
 								onClick={() => {
 									const permission = window.confirm(
-										`${selected?.uid}님의 정산을 진행하시겠습니까?`,
+										`${selected?.displayName}님의 모든 운행완료건을 정산하시겠습니까?`,
 									);
-									permission && Submit.account(user.uid, setSchedules);
+									permission &&
+										Submit.account(
+											selected?.uid,
+											setSchedules,
+											popUpNotification,
+										);
 								}}
 							>
 								<GiToken />
@@ -168,7 +172,11 @@ function App() {
 								<li className='transform '>
 									<button
 										onClick={() => {
-											messaging.sendMessage('head-out', selected?.uid);
+											messaging.sendMessage(
+												'head-out',
+												selected?.uid,
+												popUpNotification,
+											);
 										}}
 										className={`transition-all w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
 											openMessageList
@@ -187,7 +195,11 @@ function App() {
 												: 'invisible translate-y-full bg-orange-700 opacity-0'
 										}`}
 										onClick={() => {
-											messaging.sendMessage('arrived', selected?.uid);
+											messaging.sendMessage(
+												'arrived',
+												selected?.uid,
+												popUpNotification,
+											);
 										}}
 									>
 										<BiFlag />

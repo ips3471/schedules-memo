@@ -10,7 +10,8 @@ import { AiFillCarryOut } from 'react-icons/ai';
 
 function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 	const { user } = useAuthContext();
-	const { date, from, id, state, mission, reward, to, time, uid } = list;
+	const { date, from, displayName, state, mission, reward, to, time, uid } =
+		list;
 
 	const [selectedState, setSelectedState] = useState<State | null>(state);
 
@@ -117,7 +118,9 @@ function List({ list, onDelete, onUpdate, onSelect, selected }: ListProps) {
 			<div className='border-y-2 py-1 border-zinc-800 px-appBody flex justify-between items-center h-9 text-sm'>
 				{mission && <div>{mission}</div>}
 				{!mission && (
-					<span className='opacity-40'>입력된 요청사항이 없습니다.</span>
+					<span className='opacity-40'>
+						{user?.isAdmin && `${displayName}: `} 입력된 요청사항이 없습니다.
+					</span>
 				)}
 				{(state === 'pending' || state === 'confirmed') && (
 					<span>{time} 출발 예정</span>
