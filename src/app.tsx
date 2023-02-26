@@ -7,14 +7,17 @@ import { Schedule } from './types/interfaces/interfaces';
 import React from 'react';
 import { useAuthContext } from './context/AuthContext';
 import messaging from './services/messaging';
-import { PushMessage } from './types/models/models';
+import { MyDate, PushMessage } from './types/models/models';
 import { ToastContainer, toast } from 'react-toast';
 import { MdPlaylistAdd, MdOutlineAddAlert } from 'react-icons/md';
 import { BiWalk, BiFlag } from 'react-icons/bi';
 import { NavItem } from './types/components/components';
 import { GiToken } from 'react-icons/gi';
+import Planner from './components/planner/planner';
+import presenter from './presenter/planner/planner';
 
 function App() {
+	const [planner, setPlanner] = useState<MyDate[]>([]);
 	const [addForm, setAddForm] = useState(false);
 	const [selected, setSelected] = useState<Schedule>();
 	const [openMessageList, setOpenMessageList] = useState(false);
@@ -22,6 +25,10 @@ function App() {
 	const { user } = useAuthContext();
 	const [message, setMessage] = useState<PushMessage | null>(null);
 	const [nav, setNav] = useState<NavItem>('inProgress');
+
+	useEffect(() => {
+		presenter.getPlans().then(setPlanner);
+	}, []);
 
 	useEffect(() => {
 		messaging.addMessageListener(popUpNotification);
@@ -40,6 +47,10 @@ function App() {
 		setSelected(list);
 	}
 
+	const handlePlanChanged = (date: MyDate) => {
+		presenter.changeAvailable(date, setPlanner);
+	};
+
 	function handleUpdateSchedule(item: Schedule) {
 		Submit.updateSchedule(item, setSchedules, item.uid, popUpNotification);
 	}
@@ -47,6 +58,7 @@ function App() {
 	function loadLists() {
 		console.log('load lists');
 		user && Submit.getLists(user.uid, setSchedules);
+		presenter.getPlans().then(setPlanner);
 	}
 
 	function popUpNotification(title: string, body: string) {
@@ -102,6 +114,15 @@ function App() {
 			<Header onRefresh={loadLists} />
 
 			<nav className='border-b border-zinc-600 mb-4 '>
+				<ul className='flex flex-row gap-3 overflow-x-scroll scrollbar-hide m-4'>
+					{planner.map(dateObj => (
+						<Planner
+							onDateChanged={handlePlanChanged}
+							date={dateObj}
+							key={dateObj.date}
+						/>
+					))}
+				</ul>
 				<ul className='flex justify-between  text-center '>
 					<li
 						onClick={() => setNav('inProgress')}
