@@ -8,6 +8,12 @@ export type PushMessage = {
 	body: string;
 };
 
+export type MyDate = {
+	date: number;
+	available: boolean;
+	day: '월' | '화' | '수' | '목' | '금' | '토' | '일';
+};
+
 export type User = {
 	uid: string;
 	token?: string;

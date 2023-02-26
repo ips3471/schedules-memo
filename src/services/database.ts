@@ -1,3 +1,4 @@
+import { MyDate } from './../types/models/models';
 import firebaseApp from '../api/firebase';
 import { set, ref, getDatabase, get, update, remove } from 'firebase/database';
 import { Schedule } from '../types/interfaces/interfaces';
@@ -33,6 +34,20 @@ const db = {
 			}
 		} catch (err) {
 			console.error(err);
+			return [];
+		}
+	},
+
+	async getPlans(): Promise<Omit<MyDate, 'day'>[]> {
+		try {
+			const snapshot = await get(ref(this.database, 'plans'));
+			if (snapshot.exists()) {
+				return Object.values(snapshot.val());
+			} else {
+				return [];
+			}
+		} catch (err) {
+			console.error('error occurs!', err);
 			return [];
 		}
 	},
@@ -93,6 +108,10 @@ const db = {
 					return snapshot.val()[0];
 				}
 			});
+	},
+
+	async updateDateAvailable(updated: Omit<MyDate, 'day'>) {
+		update(ref(this.database, `plans/${updated.date}`), updated);
 	},
 
 	async updateUserToken(uid: string, token: string) {
