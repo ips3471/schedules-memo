@@ -7,20 +7,22 @@ import { Schedule } from './types/interfaces/interfaces';
 import React from 'react';
 import { useAuthContext } from './context/AuthContext';
 import messaging from './services/messaging';
-import { MyDate, PushMessage } from './types/models/models';
+import {
+	MyDate,
+	PushMessage,
+	SendNotificationType,
+} from './types/models/models';
 import { ToastContainer, toast } from 'react-toast';
-import { MdPlaylistAdd, MdOutlineAddAlert } from 'react-icons/md';
-import { BiWalk, BiFlag } from 'react-icons/bi';
+import { MdPlaylistAdd } from 'react-icons/md';
 import { NavItem } from './types/components/components';
-import { GiToken } from 'react-icons/gi';
 import PlannerComponent from './components/planner/planner';
 import PlannerController from './presenter/planner/planner';
+import NotificationComponent from './types/components/NotificationComponent';
 
 function App() {
 	const [planner, setPlanner] = useState<MyDate[]>([]);
 	const [addForm, setAddForm] = useState(false);
 	const [selected, setSelected] = useState<Schedule>();
-	const [openMessageList, setOpenMessageList] = useState(false);
 	const [schedules, setSchedules] = useState<Schedule[]>([]);
 	const { user } = useAuthContext();
 	const [message, setMessage] = useState<PushMessage | null>(null);
@@ -45,6 +47,10 @@ function App() {
 
 	function handleSelect(list: Schedule) {
 		setSelected(list);
+	}
+
+	function handleAccount() {
+		Submit.account(selected?.uid, setSchedules);
 	}
 
 	const handlePlanChanged = (dateObj: MyDate) => {
@@ -79,8 +85,11 @@ function App() {
 	}
 
 	function popUpNotification(title: string, body: string) {
-		console.log(title, body);
 		setMessage(prev => ({ title, body }));
+	}
+
+	function handleSendMessage(type: SendNotificationType) {
+		messaging.sendMessage(type, selected?.uid, popUpNotification);
 	}
 
 	useEffect(() => {
@@ -122,12 +131,7 @@ function App() {
 	}
 
 	return (
-		<div
-			onClick={() => {
-				openMessageList && setOpenMessageList(false);
-			}}
-			className='flex flex-col h-full z-0'
-		>
+		<div className='flex flex-col h-full z-0'>
 			<Header onRefresh={loadLists} />
 
 			<div className='border-b border-zinc-600 mb-2 '>
@@ -172,90 +176,25 @@ function App() {
 					: schedules.filter(s => s.state !== 'paid')}
 			</Schedules>
 
-			{user && (
-				<div className='flex items-end justify-end gap-2 p-4'>
-					{user.isAdmin && (
-						<>
-							<div>
-								<button
-									className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-									onClick={() => {
-										const permission = window.confirm(
-											`${selected?.displayName}님의 모든 운행완료건을 정산하시겠습니까?`,
-										);
-										permission &&
-											Submit.account(
-												selected?.uid,
-												setSchedules,
-												popUpNotification,
-											);
-									}}
-								>
-									<GiToken />
-								</button>
-							</div>
-							<ul className='flex flex-col-reverse relative'>
-								<li className=''>
-									<button
-										className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-										onClick={() => {
-											selected && setOpenMessageList(prev => !prev);
-										}}
-									>
-										<MdOutlineAddAlert />
-									</button>
-								</li>
-								<div className='relative bottom-0'>
-									<li className='transform mb-1'>
-										<button
-											onClick={() => {
-												messaging.sendMessage(
-													'head-out',
-													selected?.uid,
-													popUpNotification,
-												);
-											}}
-											className={`transition-all w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
-												openMessageList
-													? 'translate-y-0 bg-orange-500 '
-													: 'invisible translate-y-full bg-orange-700 opacity-0'
-											}`}
-										>
-											<BiWalk />
-										</button>
-									</li>
-									<li className='mb-1'>
-										<button
-											className={`transition-transform w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
-												openMessageList
-													? 'translate-y-0 bg-orange-500'
-													: 'invisible translate-y-full bg-orange-700 opacity-0'
-											}`}
-											onClick={() => {
-												messaging.sendMessage(
-													'arrived',
-													selected?.uid,
-													popUpNotification,
-												);
-											}}
-										>
-											<BiFlag />
-										</button>
-									</li>
-								</div>
-							</ul>
-						</>
-					)}
-					<div>
-						<button
-							className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-							onClick={() => setAddForm(prev => !prev)}
-						>
-							<MdPlaylistAdd />
-						</button>
+			<div>
+				{user && (
+					<div className='flex items-end justify-end gap-2 p-4'>
+						<NotificationComponent
+							onSendMessage={handleSendMessage}
+							onAccount={handleAccount}
+							selected={selected}
+						/>
+						<div>
+							<button
+								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+								onClick={() => setAddForm(prev => !prev)}
+							>
+								<MdPlaylistAdd />
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 
 			<ul className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
 				{addForm && (

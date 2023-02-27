@@ -26,7 +26,7 @@ function Schedules({
 	};
 
 	return (
-		<div className='flex-1'>
+		<div className='flex-1 overflow-y-scroll'>
 			<ul>
 				{children &&
 					user &&
