@@ -13,8 +13,8 @@ import { MdPlaylistAdd, MdOutlineAddAlert } from 'react-icons/md';
 import { BiWalk, BiFlag } from 'react-icons/bi';
 import { NavItem } from './types/components/components';
 import { GiToken } from 'react-icons/gi';
-import Planner from './components/planner/planner';
-import presenter from './presenter/planner/planner';
+import PlannerComponent from './components/planner/planner';
+import PlannerController from './presenter/planner/planner';
 
 function App() {
 	const [planner, setPlanner] = useState<MyDate[]>([]);
@@ -27,7 +27,7 @@ function App() {
 	const [nav, setNav] = useState<NavItem>('inProgress');
 
 	useEffect(() => {
-		presenter.getPlans().then(setPlanner);
+		PlannerController.getPlans().then(setPlanner);
 	}, []);
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ function App() {
 	}
 
 	const handlePlanChanged = (date: MyDate) => {
-		presenter.changeAvailable(date, setPlanner);
+		PlannerController.changeAvailable(date, setPlanner);
 	};
 
 	function handleUpdateSchedule(item: Schedule) {
@@ -58,7 +58,7 @@ function App() {
 	function loadLists() {
 		console.log('load lists');
 		user && Submit.getLists(user.uid, setSchedules);
-		presenter.getPlans().then(setPlanner);
+		PlannerController.getPlans().then(setPlanner);
 	}
 
 	function popUpNotification(title: string, body: string) {
@@ -113,10 +113,10 @@ function App() {
 		>
 			<Header onRefresh={loadLists} />
 
-			<nav className='border-b border-zinc-600 mb-4 '>
-				<ul className='flex flex-row gap-3 overflow-x-scroll scrollbar-hide m-4'>
+			<div className='border-b border-zinc-600 mb-2 '>
+				<ul className='overflow-x-scroll scrollbar-hide whitespace-nowrap gap-2 my-2 mx-1'>
 					{planner.map(dateObj => (
-						<Planner
+						<PlannerComponent
 							onDateChanged={handlePlanChanged}
 							date={dateObj}
 							key={dateObj.date}
@@ -141,7 +141,7 @@ function App() {
 						지난 여정
 					</li>
 				</ul>
-			</nav>
+			</div>
 			<ToastContainer position='top-center' />
 
 			<Schedules
@@ -239,91 +239,6 @@ function App() {
 					</div>
 				</div>
 			)}
-
-			{/* {user && (
-				<div className='flex items-end gap-5 fixed bottom-5 right-5'>
-					{user.isAdmin && (
-						<div>
-							<button
-								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-								onClick={() => {
-									const permission = window.confirm(
-										`${selected?.displayName}님의 모든 운행완료건을 정산하시겠습니까?`,
-									);
-									permission &&
-										Submit.account(
-											selected?.uid,
-											setSchedules,
-											popUpNotification,
-										);
-								}}
-							>
-								<GiToken />
-							</button>
-						</div>
-					)}
-					{user.isAdmin && (
-						<ul className='flex flex-col-reverse gap-2 relative'>
-							<li className=''>
-								<button
-									className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-									onClick={() => {
-										selected && setOpenMessageList(prev => !prev);
-									}}
-								>
-									<MdOutlineAddAlert />
-								</button>
-							</li>
-							<>
-								<li className='transform '>
-									<button
-										onClick={() => {
-											messaging.sendMessage(
-												'head-out',
-												selected?.uid,
-												popUpNotification,
-											);
-										}}
-										className={`transition-all w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
-											openMessageList
-												? 'translate-y-0 bg-orange-500 '
-												: 'invisible translate-y-full bg-orange-700 opacity-0'
-										}`}
-									>
-										<BiWalk />
-									</button>
-								</li>
-								<li>
-									<button
-										className={`transition-transform w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 ${
-											openMessageList
-												? 'translate-y-0 bg-orange-500'
-												: 'invisible translate-y-full bg-orange-700 opacity-0'
-										}`}
-										onClick={() => {
-											messaging.sendMessage(
-												'arrived',
-												selected?.uid,
-												popUpNotification,
-											);
-										}}
-									>
-										<BiFlag />
-									</button>
-								</li>
-							</>
-						</ul>
-					)}
-					<div>
-						<button
-							className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-							onClick={() => setAddForm(prev => !prev)}
-						>
-							<MdPlaylistAdd />
-						</button>
-					</div>
-				</div>
-			)} */}
 
 			<ul className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
 				{addForm && (

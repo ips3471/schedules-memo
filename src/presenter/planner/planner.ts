@@ -1,6 +1,7 @@
 import db from '../../services/database';
 import { MyDate, UpdateLists } from './../../types/models/models';
-const presenter = {
+
+const PlannerController = {
 	changeAvailable: (date: MyDate, update: UpdateLists<MyDate>) => {
 		const updated = { ...date, available: !date.available };
 		db.updateDateAvailable({
@@ -29,6 +30,7 @@ function filterDateOfThisMonth(
 		available: boolean;
 	}[],
 ): MyDate[] {
+	const MAX_LENGTH = 6;
 	const current = new Date();
 	const today = current.getDate();
 	const lastDay = new Date(
@@ -36,8 +38,22 @@ function filterDateOfThisMonth(
 		current.getMonth() + 1,
 		0,
 	).getDate();
+
 	return dateArr
-		.filter(d => d.date >= today && d.date <= lastDay)
+		.filter(d => {
+			if (lastDay - today <= MAX_LENGTH) {
+				console.log('when a tail of the month');
+				return (
+					(d.date >= today && d.date <= lastDay) ||
+					(d.date > lastDay && today - lastDay + MAX_LENGTH >= d.date - lastDay)
+				);
+			} else {
+				console.log('ordinary');
+				return (
+					today - d.date <= MAX_LENGTH && d.date >= today && d.date <= lastDay
+				);
+			}
+		})
 		.map(dateObj => {
 			const week = new Date(
 				current.getFullYear(),
@@ -46,6 +62,7 @@ function filterDateOfThisMonth(
 			).getDay();
 			return {
 				...dateObj,
+				date: dateObj.date > lastDay ? dateObj.date - lastDay : dateObj.date,
 				day:
 					week === 0
 						? '월'
@@ -64,4 +81,4 @@ function filterDateOfThisMonth(
 		});
 }
 
-export default presenter;
+export default PlannerController;
