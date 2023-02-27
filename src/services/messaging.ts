@@ -82,6 +82,7 @@ const messaging = {
 		);
 
 		function genBodyAndFetch(body: string) {
+			console.log('전송된 메시지', body);
 			const raw = JSON.stringify({
 				to: foundToken,
 				notification: {
