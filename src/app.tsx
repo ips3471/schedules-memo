@@ -47,8 +47,25 @@ function App() {
 		setSelected(list);
 	}
 
-	const handlePlanChanged = (date: MyDate) => {
-		PlannerController.changeAvailable(date, setPlanner);
+	const handlePlanChanged = (dateObj: MyDate) => {
+		if (user?.isAdmin) {
+			if (dateObj.date > new Date().getDate()) {
+				console.log('plan update', dateObj, dateObj.available);
+				PlannerController.changeAvailable(dateObj, setPlanner);
+			} else {
+				console.log('passed fixed date');
+				handlePlanChanged({
+					...dateObj,
+					date:
+						dateObj.date +
+						new Date(
+							new Date().getFullYear(),
+							new Date().getMonth() + 1,
+							0,
+						).getDate(),
+				});
+			}
+		}
 	};
 
 	function handleUpdateSchedule(item: Schedule) {

@@ -3,6 +3,7 @@ import { MyDate, UpdateLists } from './../../types/models/models';
 
 const PlannerController = {
 	changeAvailable: (date: MyDate, update: UpdateLists<MyDate>) => {
+		console.log('to be updated', date);
 		const updated = { ...date, available: !date.available };
 		db.updateDateAvailable({
 			date: updated.date,
@@ -12,6 +13,25 @@ const PlannerController = {
 			prev.map(item => {
 				if (item.date === date.date) {
 					return updated;
+				} else if (
+					item.date +
+						new Date(
+							new Date().getFullYear(),
+							new Date().getMonth() + 1,
+							0,
+						).getDate() ===
+					date.date
+				) {
+					return {
+						...updated,
+						date:
+							updated.date -
+							new Date(
+								new Date().getFullYear(),
+								new Date().getMonth() + 1,
+								0,
+							).getDate(),
+					};
 				} else {
 					return item;
 				}
@@ -60,6 +80,7 @@ function filterDateOfThisMonth(
 				current.getMonth() + 1,
 				dateObj.date,
 			).getDay();
+
 			return {
 				...dateObj,
 				date: dateObj.date > lastDay ? dateObj.date - lastDay : dateObj.date,
