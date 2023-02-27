@@ -176,23 +176,25 @@ function App() {
 					: schedules.filter(s => s.state !== 'paid')}
 			</Schedules>
 
-			{user && (
-				<div className='flex items-end justify-end gap-2 p-4'>
-					<NotificationComponent
-						onSendMessage={handleSendMessage}
-						onAccount={handleAccount}
-						selected={selected}
-					/>
-					<div>
-						<button
-							className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
-							onClick={() => setAddForm(prev => !prev)}
-						>
-							<MdPlaylistAdd />
-						</button>
+			<div>
+				{user && (
+					<div className='flex items-end justify-end gap-2 p-4'>
+						<NotificationComponent
+							onSendMessage={handleSendMessage}
+							onAccount={handleAccount}
+							selected={selected}
+						/>
+						<div>
+							<button
+								className='w-16 h-16 text-3xl flex justify-center items-center rounded-full py-6 bg-orange-700'
+								onClick={() => setAddForm(prev => !prev)}
+							>
+								<MdPlaylistAdd />
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 
 			<ul className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
 				{addForm && (
