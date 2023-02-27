@@ -37,11 +37,7 @@ const Submit = {
 		}
 	},
 
-	async account(
-		uid: string = '',
-		update: UpdateLists<Schedule>,
-		callback: (title: string, body: string) => void,
-	) {
+	async account(uid: string = '', update: UpdateLists<Schedule>) {
 		if (!uid) {
 			throw new Error('Not Found UID');
 		}
@@ -51,7 +47,6 @@ const Submit = {
 			.then(filtered => {
 				updateFromList(filtered, uid, update);
 			});
-		messaging.sendMessage('accounted', uid, callback);
 	},
 
 	updateSchedule(
