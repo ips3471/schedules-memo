@@ -37,25 +37,15 @@ function filterDateOfThisMonth(
 		available: boolean;
 	}[],
 ): MyDate[] {
-	const MAX_LENGTH = 6;
+	const MAX_LENGTH = 7;
 	const { today, lastDayOfMonth, current } = PrintDate;
 
 	return dateArr
 		.filter(d => {
-			if (lastDayOfMonth - today <= MAX_LENGTH) {
-				console.log('when a tail of the month');
-				return (
-					(d.date >= today && d.date <= lastDayOfMonth) ||
-					(d.date > lastDayOfMonth &&
-						today - lastDayOfMonth + MAX_LENGTH >= d.date - lastDayOfMonth)
-				);
+			if (lastDayOfMonth - today < MAX_LENGTH) {
+				return d.date > today || d.date <= MAX_LENGTH;
 			} else {
-				console.log('ordinary');
-				return (
-					today - d.date <= MAX_LENGTH &&
-					d.date >= today &&
-					d.date <= lastDayOfMonth
-				);
+				return d.date > today && d.date <= today + MAX_LENGTH;
 			}
 		})
 		.map(dateObj => {
@@ -63,24 +53,20 @@ function filterDateOfThisMonth(
 
 			return {
 				...dateObj,
-				date:
-					dateObj.date > lastDayOfMonth
-						? dateObj.date - lastDayOfMonth
-						: dateObj.date,
 				day:
 					week === 0
-						? '월'
+						? '일'
 						: week === 1
-						? '화'
+						? '월'
 						: week === 2
-						? '수'
+						? '화'
 						: week === 3
-						? '목'
+						? '수'
 						: week === 4
-						? '금'
+						? '목'
 						: week === 5
-						? '토'
-						: '일',
+						? '금'
+						: '토',
 			};
 		});
 }
