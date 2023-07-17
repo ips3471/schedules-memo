@@ -11,8 +11,6 @@ export const PrintDate = {
 	today: current.getDate(),
 	lastDayOfMonth: new Date(thisYear, thisMonth, 0).getDate(),
 	parseWeek(dateObj: DateElement) {
-		console.log(new Date(thisYear, thisMonth, dateObj.date));
-
 		return new Date(thisYear, thisMonth, dateObj.date).getDay();
 	},
 };

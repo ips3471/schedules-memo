@@ -135,7 +135,7 @@ function App() {
 			<Header onRefresh={loadLists} />
 
 			<div className='border-b border-zinc-600 mb-2 '>
-				<ul className='overflow-x-scroll scrollbar-hide whitespace-nowrap gap-2 my-2 mx-1'>
+				{/* <ul className='overflow-x-scroll scrollbar-hide whitespace-nowrap gap-2 my-2 mx-1'>
 					{planner.map(dateObj => (
 						<PlannerComponent
 							onDateChanged={handlePlanChanged}
@@ -143,7 +143,7 @@ function App() {
 							key={dateObj.date}
 						/>
 					))}
-				</ul>
+				</ul> */}
 				<ul className='flex justify-between  text-center '>
 					<li
 						onClick={() => setNav('inProgress')}
