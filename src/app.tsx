@@ -29,10 +29,6 @@ function App() {
 	const [nav, setNav] = useState<NavItem>('inProgress');
 
 	useEffect(() => {
-		PlannerController.getPlans().then(setPlanner);
-	}, []);
-
-	useEffect(() => {
 		messaging.addMessageListener(popUpNotification);
 		if (!user) {
 			return;
@@ -133,17 +129,8 @@ function App() {
 	return (
 		<div className='flex flex-col h-full z-0'>
 			<Header onRefresh={loadLists} />
-
 			<div className='border-b border-zinc-600 mb-2 '>
-				{/* <ul className='overflow-x-scroll scrollbar-hide whitespace-nowrap gap-2 my-2 mx-1'>
-					{planner.map(dateObj => (
-						<PlannerComponent
-							onDateChanged={handlePlanChanged}
-							date={dateObj}
-							key={dateObj.date}
-						/>
-					))}
-				</ul> */}
+				<div className='my-2 mx-1'></div>
 				<ul className='flex justify-between  text-center '>
 					<li
 						onClick={() => setNav('inProgress')}
@@ -164,7 +151,13 @@ function App() {
 				</ul>
 			</div>
 			<ToastContainer position='top-center' />
-
+			<div className='p-4 text-lg'>
+				정산예정금액:
+				{schedules
+					.filter(s => s.state === 'finished')
+					.reduce((acc, curr) => acc + curr.reward, 0)
+					.toLocaleString('ko')}
+			</div>
 			<Schedules
 				selected={selected}
 				onSelect={handleSelect}
@@ -175,7 +168,6 @@ function App() {
 					? schedules.filter(s => s.state === 'paid')
 					: schedules.filter(s => s.state !== 'paid')}
 			</Schedules>
-
 			<div>
 				{user && (
 					<div className='flex items-end justify-end gap-2 p-4'>
@@ -195,7 +187,6 @@ function App() {
 					</div>
 				)}
 			</div>
-
 			<ul className='fixed top-1/2 -translate-y-1/2 max-w-screen-sm'>
 				{addForm && (
 					<AddScheduleForm
